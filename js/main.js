@@ -95,4 +95,175 @@ document.querySelectorAll('.property-card, .feature-card').forEach(card => {
     });
 });
 
+// ハンバーガーメニュー機能
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.getElementById('nav-overlay');
+    const body = document.body;
+    
+    // メニューを開く/閉じる関数
+    function toggleMenu() {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        navOverlay.classList.toggle('active');
+        body.classList.toggle('menu-open');
+    }
+    
+    // ハンバーガーアイコンをクリックした時
+    hamburger.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleMenu();
+    });
+    
+    // オーバーレイをクリックした時（メニューを閉じる）
+    navOverlay.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('menu-open');
+    });
+    
+    // メニュー内のリンクをクリックした時（メニューを閉じる）
+    navMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            navOverlay.classList.remove('active');
+            body.classList.remove('menu-open');
+        });
+    });
+    
+    // ESCキーでメニューを閉じる
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            navOverlay.classList.remove('active');
+            body.classList.remove('menu-open');
+        }
+    });
+});
+
+// Swiperヒーロースライダー
+document.addEventListener('DOMContentLoaded', () => {
+    const heroSwiper = new Swiper('.hero-swiper', {
+        // 基本設定
+        loop: true,
+        speed: 800,
+        effect: 'fade',
+        fadeEffect: {
+            crossFade: true
+        },
+        
+        // 画像プリロード無効化（ブランク防止）
+        preloadImages: false,
+        
+        // 自動再生
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+            waitForTransition: true,
+        },
+        
+        // ページインジケーター
+        pagination: {
+            el: '.hero-pagination',
+            clickable: true,
+            dynamicBullets: false,
+        },
+        
+        // ナビゲーション矢印
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        
+        // レスポンシブ
+        breakpoints: {
+            320: {
+                autoplay: {
+                    delay: 4000,
+                },
+            },
+            768: {
+                autoplay: {
+                    delay: 5000,
+                },
+            },
+        },
+        
+        // アクセシビリティ
+        a11y: {
+            prevSlideMessage: '前のスライド',
+            nextSlideMessage: '次のスライド',
+            paginationBulletMessage: 'スライド %全%',
+        },
+    });
+    
+    // スライダー開始時のアニメーション
+    heroSwiper.on('slideChange', function () {
+        // スライド遷移時にテキストアニメーションをリセット
+        const activeSlide = document.querySelector('.hero-slide.swiper-slide-active');
+        if (activeSlide) {
+            const title = activeSlide.querySelector('.hero-title');
+            const subtitle = activeSlide.querySelector('.hero-subtitle');
+            const buttons = activeSlide.querySelector('.hero-buttons');
+            
+            if (title) {
+                title.style.opacity = '0';
+                title.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    title.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                    title.style.opacity = '1';
+                    title.style.transform = 'translateY(0)';
+                }, 100);
+            }
+            
+            if (subtitle) {
+                subtitle.style.opacity = '0';
+                subtitle.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    subtitle.style.transition = 'opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s';
+                    subtitle.style.opacity = '1';
+                    subtitle.style.transform = 'translateY(0)';
+                }, 100);
+            }
+            
+            if (buttons) {
+                buttons.style.opacity = '0';
+                buttons.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    buttons.style.transition = 'opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s';
+                    buttons.style.opacity = '1';
+                    buttons.style.transform = 'translateY(0)';
+                }, 100);
+            }
+        }
+    });
+    
+    // 最初のスライドをアニメーション
+    setTimeout(() => {
+        const firstSlide = document.querySelector('.hero-slide.swiper-slide-active');
+        if (firstSlide) {
+            const title = firstSlide.querySelector('.hero-title');
+            const subtitle = firstSlide.querySelector('.hero-subtitle');
+            const buttons = firstSlide.querySelector('.hero-buttons');
+            
+            if (title) {
+                title.style.opacity = '1';
+                title.style.transform = 'translateY(0)';
+            }
+            if (subtitle) {
+                subtitle.style.opacity = '1';
+                subtitle.style.transform = 'translateY(0)';
+            }
+            if (buttons) {
+                buttons.style.opacity = '1';
+                buttons.style.transform = 'translateY(0)';
+            }
+        }
+    }, 500);
+});
+
 console.log('✨ Frejuno Gallery Experience loaded');
