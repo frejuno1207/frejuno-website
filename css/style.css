@@ -578,6 +578,11 @@ section {
     .hero {
         padding: 6rem 1rem 4rem;
         min-height: 60vh;
+        /* スマホのヒーロー画像：自動収縮 */
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: scroll;
     }
 }
 
