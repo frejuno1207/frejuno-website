@@ -6,8 +6,6 @@
     <title>株式会社Frejuno - 松山市の不動産、信頼と実績</title>
     <meta name="description" content="愛媛県松山市の不動産会社Frejuno。賃貸・売買・買取・リフォーム相談まで、地域密着型の安心サービス。土日営業、英語対応可。">
     
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations.css">
@@ -19,75 +17,26 @@
             <div class="header-content">
                 <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="Frejuno"></a></h1>
                 <nav class="nav">
-                    <ul class="nav-menu">
+                    <ul>
                         <li><a href="#top">トップ</a></li>
                         <li><a href="properties.html">物件一覧</a></li>
                         <li><a href="about.html">会社概要</a></li>
                         <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
                     </ul>
-                    <!-- ハンバーガーメニューアイコン -->
-                    <div class="hamburger" id="hamburger">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
                 </nav>
             </div>
         </div>
     </header>
 
-    <!-- オーバーレイ -->
-    <div class="nav-overlay" id="nav-overlay"></div>
-
-    <!-- ヒーローセクション（Swiperスライダー） -->
-    <section class="hero-section" id="top">
-        <div class="swiper hero-swiper">
-            <div class="swiper-wrapper">
-                <!-- スライド1 -->
-                <div class="swiper-slide hero-slide">
-                    <div class="hero-image" style="background-image: url('images/hero-01.png');"></div>
-                    <div class="hero-overlay"></div>
-                    <div class="hero-content">
-                        <h2 class="hero-title animate-fadeInUp">松山の記憶と<br>一人ひとりに寄り添う<br>不動産</h2>
-                        <p class="hero-subtitle animate-fadeInUp delay-200">地域に根差した、新しい形の住まい探しを</p>
-                        <div class="hero-buttons animate-fadeInUp delay-400">
-                            <a href="properties.html" class="btn btn-primary">物件を探す</a>
-                            <a href="contact.html" class="btn btn-secondary">お問い合わせ</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- スライド2 -->
-                <div class="swiper-slide hero-slide">
-                    <div class="hero-image" style="background-image: url('images/hero-02.png');"></div>
-                    <div class="hero-overlay"></div>
-                    <div class="hero-content">
-                        <h2 class="hero-title animate-fadeInUp">理想の暮らしを<br>松山市で見つける</h2>
-                        <p class="hero-subtitle animate-fadeInUp delay-200">賃貸から売買まで、幅広い物件を取り揃え</p>
-                        <div class="hero-buttons animate-fadeInUp delay-400">
-                            <a href="properties.html" class="btn btn-primary">物件一覧を見る</a>
-                            <a href="contact.html" class="btn btn-secondary">査定を依頼する</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- スライド3 -->
-                <div class="swiper-slide hero-slide">
-                    <div class="hero-image" style="background-image: url('images/hero-03.png');"></div>
-                    <div class="hero-overlay"></div>
-                    <div class="hero-content">
-                        <h2 class="hero-title animate-fadeInUp">英語を話すスタッフが<br>外国人のお客様をサポート</h2>
-                        <p class="hero-subtitle animate-fadeInUp delay-200">グローバルなお悩みも安心の日本式サービス</p>
-                        <div class="hero-buttons animate-fadeInUp delay-400">
-                            <a href="contact.html" class="btn btn-primary">お問い合わせ</a>
-                            <a href="properties.html" class="btn btn-secondary">物件を探す</a>
-                        </div>
-                    </div>
-                </div>
+    <!-- ヒーローセクション -->
+    <section class="hero" id="top">
+        <div class="hero-content">
+            <h2 class="hero-title animate-fadeInUp">松山市の不動産、<br>信頼と実績のFrejuno</h2>
+            <p class="hero-subtitle animate-fadeInUp delay-200">あなたの理想の住まい探しをサポートします</p>
+            <div class="hero-buttons animate-fadeInUp delay-400">
+                <a href="properties.html" class="btn btn-primary">物件を探す</a>
+                <a href="contact.html" class="btn btn-secondary">お問い合わせ</a>
             </div>
-            <!-- ナビゲーション矢印 -->
-            <div class="swiper-button-next hero-nav-btn"></div>
-            <div class="swiper-button-prev hero-nav-btn"></div>
-            <!-- ページインジケーター -->
-            <div class="swiper-pagination hero-pagination"></div>
         </div>
     </section>
 
@@ -165,9 +114,7 @@
             <h2 class="section-title">おすすめ物件</h2>
             <div style="max-width: 600px; margin: 0 auto;">
                 <div class="property-card" onclick="location.href='property-detail.html?id=1'" style="cursor: pointer;">
-                    <div class="property-image">
-                        <img src="images/property-takako-exterior-1.jpg" alt="松山市 鷹子町 3SLDK">
-                    </div>
+                    <div class="property-image" style="width: 100%; height: 250px; background-image: url('images/property-takako-exterior-1.jpg'); background-size: cover; background-position: center;"></div>
                     <div class="property-info">
                         <div class="property-price">¥2,530万円</div>
                         <div class="property-title">松山市 鷹子町 3SLDK</div>
@@ -288,15 +235,13 @@
         });
     </script>
     
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    
     <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsxmS0TYlKgGB0jQ9sZvc-FES-Ge_DQGI&libraries=places&language=ja"></script>
     
     <!-- 他のJavaScript -->
     <script src="js/config.js"></script>
     <script src="js/maps.js"></script>
+    <script src="js/hero-slider.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
