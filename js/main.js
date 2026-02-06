@@ -273,20 +273,20 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Hamburger menu initializing...');
     
     const hamburger = document.getElementById('hamburger');
-    const navMenu = document.querySelector('.nav-menu');
+    const navMobileMenu = document.querySelector('.nav-mobile-menu');
     const navOverlay = document.getElementById('nav-overlay');
     const body = document.body;
     
     console.log('hamburger:', hamburger);
-    console.log('navMenu:', navMenu);
+    console.log('navMobileMenu:', navMobileMenu);
     console.log('navOverlay:', navOverlay);
     
-    if (hamburger && navMenu) {
+    if (hamburger && navMobileMenu) {
         // ハンバーガーアイコンをクリック
         hamburger.addEventListener('click', function(e) {
             console.log('Hamburger clicked!');
             hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
+            navMobileMenu.classList.toggle('active');
             navOverlay.classList.toggle('active');
             body.classList.toggle('menu-open');
         });
@@ -295,17 +295,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (navOverlay) {
             navOverlay.addEventListener('click', function() {
                 hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
+                navMobileMenu.classList.remove('active');
                 navOverlay.classList.remove('active');
                 body.classList.remove('menu-open');
             });
         }
         
         // メニュー項目をクリックしたら閉じる
-        navMenu.querySelectorAll('a').forEach(function(link) {
+        navMobileMenu.querySelectorAll('a').forEach(function(link) {
             link.addEventListener('click', function() {
                 hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
+                navMobileMenu.classList.remove('active');
                 navOverlay.classList.remove('active');
                 body.classList.remove('menu-open');
             });

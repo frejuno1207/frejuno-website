@@ -74,13 +74,13 @@ h1, h2, h3, h4, h5, h6 {
     height: 50px;
 }
 
-.nav ul, .nav-menu {
+.nav ul, .nav-mobile-menu{
     display: flex;
     list-style: none;
     gap: 2.5rem;
 }
 
-.nav a, .nav-menu a {
+.nav a, .nav-mobile-menua {
     text-decoration: none;
     color: var(--color-text);
     font-weight: 400;
@@ -88,7 +88,7 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.05em;
 }
 
-.nav a:hover, .nav-menu a:hover {
+.nav a:hover, .nav-mobile-menua:hover {
     color: var(--color-primary);
 }
 
@@ -667,7 +667,7 @@ section {
     }
 
     /* ナビゲーションメニュー（スマホ用） */
-    .nav-menu {
+    .nav-mobile-menu{
         display: flex !important;
         position: fixed;
         top: 0;
@@ -689,12 +689,12 @@ section {
         right: 0;
     }
 
-    .nav-menu li {
+    .nav-mobile-menuli {
         width: 100%;
         border-bottom: 1px solid var(--color-gray);
     }
 
-    .nav-menu li a {
+    .nav-mobile-menuli a {
         display: block;
         padding: 1.3rem 1.5rem;
         font-size: 1.1rem;
@@ -702,12 +702,12 @@ section {
         transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .nav-menu li a:hover {
+    .nav-mobile-menuli a:hover {
         background-color: var(--color-gray);
         color: var(--color-primary);
     }
 
-    .nav-menu .btn-contact {
+    .nav-mobile-menu.btn-contact {
         background-color: var(--color-primary);
         color: white;
         text-align: center;
@@ -715,7 +715,7 @@ section {
         border-radius: 0;
     }
 
-    .nav-menu .btn-contact:hover {
+    .nav-mobile-menu.btn-contact:hover {
         background-color: var(--color-secondary);
     }
 
