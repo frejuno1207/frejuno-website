@@ -74,13 +74,13 @@ h1, h2, h3, h4, h5, h6 {
     height: 50px;
 }
 
-.nav ul {
+.nav ul, .nav-menu {
     display: flex;
     list-style: none;
     gap: 2.5rem;
 }
 
-.nav a {
+.nav a, .nav-menu a {
     text-decoration: none;
     color: var(--color-text);
     font-weight: 400;
@@ -88,7 +88,7 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.05em;
 }
 
-.nav a:hover {
+.nav a:hover, .nav-menu a:hover {
     color: var(--color-primary);
 }
 
@@ -617,6 +617,10 @@ section {
     color: #999;
 }
 
+.hamburger {
+    display: none;
+}
+
 /* レスポンシブ */
 @media (max-width: 768px) {
     /* ハンバーガーアイコンを表示 */
@@ -737,11 +741,6 @@ section {
     /* スクロールロック（メニュー開いている時） */
     body.menu-open {
         overflow: hidden;
-    }
-
-    /* 元のPC用nav ulを非表示に */
-    .nav > ul {
-        display: none !important;
     }
 
     .header {
