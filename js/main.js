@@ -270,14 +270,21 @@ console.log('✨ Frejuno Gallery Experience loaded');
 
 // ハンバーガーメニュー
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Hamburger menu initializing...');
+    
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.querySelector('.nav-menu');
     const navOverlay = document.getElementById('nav-overlay');
     const body = document.body;
     
+    console.log('hamburger:', hamburger);
+    console.log('navMenu:', navMenu);
+    console.log('navOverlay:', navOverlay);
+    
     if (hamburger && navMenu) {
         // ハンバーガーアイコンをクリック
-        hamburger.addEventListener('click', function() {
+        hamburger.addEventListener('click', function(e) {
+            console.log('Hamburger clicked!');
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
             navOverlay.classList.toggle('active');
@@ -303,5 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 body.classList.remove('menu-open');
             });
         });
+    } else {
+        console.error('Hamburger menu elements not found!');
     }
 });
