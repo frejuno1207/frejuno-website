@@ -1,4 +1,4 @@
-// ヒーロースライドショー - 時間でクロスフェード切り替え
+// ヒーロースライドショー - 時間でクロスフェード + スクロールで高さ変更
 
 const heroImages = [
     'images/hero-01.png',
@@ -14,6 +14,7 @@ const SLIDE_DURATION = 5000; // 5秒ごとに切り替え
 function initHeroSlider() {
     const heroBg1 = document.querySelector('.hero-bg-1');
     const heroBg2 = document.querySelector('.hero-bg-2');
+    const heroSection = document.querySelector('.hero-section');
     
     if (!heroBg1 || !heroBg2) return;
     
@@ -39,6 +40,23 @@ function initHeroSlider() {
         
         currentIndex = nextIndex;
     }, SLIDE_DURATION);
+    
+    // スクロールに合わせてヒーローの高さを変更
+    if (heroSection) {
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const maxScroll = 300; // 最大スクロール量
+            const minHeight = 50; // 最小50vh
+            
+            if (scrollY < maxScroll) {
+                // スクロールに合わせて高さを小さく（100vh → 50vh）
+                const newHeight = 100 - (scrollY / maxScroll) * 50;
+                heroSection.style.height = `${newHeight}vh`;
+            } else {
+                heroSection.style.height = `${minHeight}vh`;
+            }
+        });
+    }
 }
 
 // ページ読み込み時に初期化
