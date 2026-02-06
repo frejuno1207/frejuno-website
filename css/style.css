@@ -74,13 +74,13 @@ h1, h2, h3, h4, h5, h6 {
     height: 50px;
 }
 
-.nav ul, .nav-mobile-menu{
+.nav ul {
     display: flex;
     list-style: none;
     gap: 2.5rem;
 }
 
-.nav a, .nav-mobile-menua {
+.nav a {
     text-decoration: none;
     color: var(--color-text);
     font-weight: 400;
@@ -88,7 +88,7 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.05em;
 }
 
-.nav a:hover, .nav-mobile-menua:hover {
+.nav a:hover {
     color: var(--color-primary);
 }
 
@@ -621,6 +621,10 @@ section {
     display: none;
 }
 
+.nav-mobile {
+    display: none;
+}
+
 /* レスポンシブ */
 @media (max-width: 768px) {
     /* ハンバーガーアイコンを表示 */
@@ -666,35 +670,47 @@ section {
         transform: rotate(-45deg) translate(6px, -6px);
     }
 
-    /* ナビゲーションメニュー（スマホ用） */
-    .nav-mobile-menu{
+    /* モバイル用ナビゲーション */
+    .nav-mobile {
+        display: block;
+    }
+
+    .nav-mobile-menu {
         display: flex !important;
         position: fixed;
-        top: 0;
-        right: -100%;
-        width: 85%;
-        max-width: 320px;
-        height: 100vh;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: auto;
+        max-height: 80vh;
         background-color: var(--color-bg);
         flex-direction: column;
         justify-content: flex-start;
-        padding-top: 70px;
+        padding-top: 60px;
+        padding-bottom: 20px;
         gap: 0;
-        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
-        transition: right 0.4s ease;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+        transition: top 0.4s ease;
         z-index: 1000;
+        overflow-y: auto;
+        list-style: none;
     }
 
-    .nav-menu.active {
-        right: 0;
+    .nav-mobile-menu.active {
+        top: 0;
     }
 
-    .nav-mobile-menuli {
+    /* PC用ナビゲーションを非表示 */
+    .nav > ul {
+        display: none !important;
+    }
+
+    .nav-mobile-menu li {
         width: 100%;
         border-bottom: 1px solid var(--color-gray);
     }
 
-    .nav-mobile-menuli a {
+    .nav-mobile-menu li a {
         display: block;
         padding: 1.3rem 1.5rem;
         font-size: 1.1rem;
@@ -702,12 +718,12 @@ section {
         transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .nav-mobile-menuli a:hover {
+    .nav-mobile-menu li a:hover {
         background-color: var(--color-gray);
         color: var(--color-primary);
     }
 
-    .nav-mobile-menu.btn-contact {
+    .nav-mobile-menu .btn-contact {
         background-color: var(--color-primary);
         color: white;
         text-align: center;
@@ -715,7 +731,7 @@ section {
         border-radius: 0;
     }
 
-    .nav-mobile-menu.btn-contact:hover {
+    .nav-mobile-menu .btn-contact:hover {
         background-color: var(--color-secondary);
     }
 
