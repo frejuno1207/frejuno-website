@@ -267,3 +267,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 console.log('✨ Frejuno Gallery Experience loaded');
+
+// ハンバーガーメニュー
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.getElementById('nav-overlay');
+    const body = document.body;
+    
+    if (hamburger && navMenu) {
+        // ハンバーガーアイコンをクリック
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            body.classList.toggle('menu-open');
+        });
+        
+        // オーバーレイをクリック
+        if (navOverlay) {
+            navOverlay.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                navOverlay.classList.remove('active');
+                body.classList.remove('menu-open');
+            });
+        }
+        
+        // メニュー項目をクリックしたら閉じる
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                navOverlay.classList.remove('active');
+                body.classList.remove('menu-open');
+            });
+        });
+    }
+});
