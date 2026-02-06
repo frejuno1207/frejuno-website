@@ -1,4 +1,4 @@
-// ヒーロースライドショー - 時間でフェード切り替え
+// ヒーロースライドショー - 時間でクロスフェード切り替え
 
 const heroImages = [
     'images/hero-01.png',
@@ -8,33 +8,37 @@ const heroImages = [
     'images/hero-05.png'
 ];
 
-let currentImageIndex = 0;
+let currentIndex = 0;
 const SLIDE_DURATION = 5000; // 5秒ごとに切り替え
-const FADE_DURATION = 1500; // 1.5秒でフェード
 
 function initHeroSlider() {
-    const heroSection = document.querySelector('.hero');
-    if (!heroSection) return;
+    const heroBg1 = document.querySelector('.hero-bg-1');
+    const heroBg2 = document.querySelector('.hero-bg-2');
     
-    // 現在の背景画像を設定
-    updateHeroBackground();
+    if (!heroBg1 || !heroBg2) return;
+    
+    // 最初の画像を設定
+    heroBg1.style.backgroundImage = `url('${heroImages[0]}')`;
+    heroBg1.classList.add('active');
     
     // 定期的に画像を切り替え
     setInterval(() => {
-        currentImageIndex = (currentImageIndex + 1) % heroImages.length;
-        updateHeroBackground();
+        const nextIndex = (currentIndex + 1) % heroImages.length;
+        
+        if (currentIndex % 2 === 0) {
+            // bg1 → bg2
+            heroBg2.style.backgroundImage = `url('${heroImages[nextIndex]}')`;
+            heroBg2.classList.add('active');
+            heroBg1.classList.remove('active');
+        } else {
+            // bg2 → bg1
+            heroBg1.style.backgroundImage = `url('${heroImages[nextIndex]}')`;
+            heroBg1.classList.add('active');
+            heroBg2.classList.remove('active');
+        }
+        
+        currentIndex = nextIndex;
     }, SLIDE_DURATION);
-}
-
-function updateHeroBackground() {
-    const heroSection = document.querySelector('.hero');
-    if (!heroSection) return;
-    
-    const nextImage = heroImages[currentImageIndex];
-    
-    // 新しい画像を設定（transitionはCSSで定義済み）
-    // 透明度を下げて画像を見やすく（0.65）
-    heroSection.style.backgroundImage = `linear-gradient(135deg, rgba(164, 139, 111, 0.65) 0%, rgba(121, 103, 85, 0.65) 100%), url('${nextImage}')`;
 }
 
 // ページ読み込み時に初期化
