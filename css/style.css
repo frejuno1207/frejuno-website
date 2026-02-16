@@ -638,6 +638,13 @@ section {
     transition: all 0.3s ease;
 }
 
+/* デスクトップでは検索バーを非表示 */
+@media (min-width: 769px) {
+    .header-search-bar {
+        display: none !important;
+    }
+}
+
 .header-search-bar:focus-within {
     box-shadow: 0 2px 10px rgba(201, 168, 124, 0.3);
     background-color: white;
