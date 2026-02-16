@@ -198,15 +198,45 @@
         <div class="container">
             <div class="header-content">
                 <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="Frejuno"></a></h1>
+                
+                <!-- PC用検索バー -->
+                <div class="header-search-bar" role="search" aria-label="物件検索">
+                    <input 
+                        type="text" 
+                        id="header-search-input" 
+                        placeholder="エリア・駅名で検索..." 
+                        aria-label="検索キーワード入力"
+                    />
+                    <button 
+                        class="header-search-btn" 
+                        id="header-search-btn" 
+                        aria-label="検索実行"
+                        type="button"
+                    >
+                        🔍
+                    </button>
+                </div>
+                
                 <nav class="nav">
+                    <!-- モバイル用検索トグルボタン -->
+                    <button 
+                        class="mobile-search-toggle" 
+                        id="mobile-search-toggle" 
+                        aria-label="検索を開く"
+                        aria-expanded="false"
+                    >
+                        🔍
+                    </button>
+                    
                     <ul>
                         <li><a href="index.html">トップ</a></li>
                         <li><a href="properties.html">物件一覧</a></li>
                         <li><a href="about.html">会社概要</a></li>
                         <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
                     </ul>
+                    
                     <!-- ハンバーガーメニューアイコン -->
-                    <div class="hamburger" id="hamburger">
+                    <div class="hamburger" id="hamburger" role="button" aria-label="メニューを開く" tabindex="0">
                         <span></span>
                         <span></span>
                         <span></span>
@@ -214,20 +244,51 @@
                 </nav>
             </div>
         </div>
+        
+        <!-- モバイル用検索バー（展開式） -->
+        <div class="mobile-search-expanded" id="mobile-search-expanded" role="search" aria-label="モバイル物件検索">
+            <div class="container">
+                <div class="header-search-bar">
+                    <input 
+                        type="text" 
+                        id="mobile-search-input" 
+                        placeholder="エリア・駅名で検索..." 
+                        aria-label="モバイル検索キーワード入力"
+                    />
+                    <button 
+                        class="header-search-btn" 
+                        id="mobile-search-btn" 
+                        aria-label="モバイル検索実行"
+                        type="button"
+                    >
+                        🔍
+                    </button>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- モバイル用ナビゲーション -->
-    <nav class="nav-mobile">
-        <ul class="nav-mobile-menu">
+    <nav class="nav-mobile" role="navigation" aria-label="モバイルメニュー">
+        <ul class="nav-mobile-menu" id="nav-mobile-menu">
             <li><a href="index.html">トップ</a></li>
             <li><a href="properties.html">物件一覧</a></li>
             <li><a href="about.html">会社概要</a></li>
             <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
         </ul>
+        <button class="mobile-menu-close" id="mobile-menu-close" aria-label="メニューを閉じる">×</button>
     </nav>
 
     <!-- オーバーレイ -->
-    <div class="nav-overlay" id="nav-overlay"></div>
+    <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+    
+    <!-- 固定査定CTAボタン -->
+    <div class="fixed-assessment-cta" role="complementary" aria-label="査定依頼">
+        <a href="contact.html?service=assessment" aria-label="無料査定依頼ページへ">
+            <span class="icon">📋</span>
+            無料査定依頼
+        </a>
+    </div>
 
     <!-- メインコンテンツ -->
     <main>
@@ -320,8 +381,16 @@
         </div>
     </footer>
 
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=REDACTED_GOOGLE_MAPS_API_KEY&libraries=places&language=ja"></script>
+    <!-- Google Maps API (loaded dynamically from environment) -->
+    <script>
+        // Load Google Maps API with key from environment
+        const apiKey = window.GOOGLE_API_KEY || '';
+        if (apiKey) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
+            document.head.appendChild(script);
+        }
+    </script>
     
     <script src="js/config.js"></script>
     <script src="js/properties.js"></script>
