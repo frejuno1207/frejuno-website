@@ -2,9 +2,6 @@
 // Google Maps/Places API設定
 
 const CONFIG = {
-    // Google Maps API Key (environment variable)
-    GOOGLE_API_KEY: import.meta.env.VITE_GOOGLE_API_KEY || '',
-    
     // 会社情報
     COMPANY: {
         name: '株式会社Frejuno',
@@ -35,5 +32,4 @@ const CONFIG = {
     }
 };
 
-// APIキーをグローバルに公開（Maps API読み込み用）
-window.GOOGLE_API_KEY = CONFIG.GOOGLE_API_KEY;
+// APIキーはapi-key.jsで設定される
