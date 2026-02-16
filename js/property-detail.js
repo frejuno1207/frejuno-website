@@ -18,6 +18,8 @@ function getPropertyData(id) {
         id: 1,
         type: '売中古一戸建',
         title: '松山市 鷹子町 3SLDK',
+        lat: 33.9845,
+        lng: 132.8502,
         price: 25300000,
         layout: '3SLDK',
         area: 84.45,

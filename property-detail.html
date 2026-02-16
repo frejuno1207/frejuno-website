@@ -335,9 +335,10 @@
     </footer>
 
     <!-- Google Maps API (loaded dynamically from environment) -->
+    <script src="js/api-key.js"></script>
     <script>
         // Load Google Maps API with key from environment
-        const apiKey = window.GOOGLE_API_KEY || '';
+        const apiKey = window.GOOGLE_MAPS_API_KEY || '';
         if (apiKey) {
             const script = document.createElement('script');
             script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
