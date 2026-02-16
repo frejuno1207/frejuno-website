@@ -1,5 +1,82 @@
 // Frejuno Website メインスクリプト - アートギャラリー風アニメーション
 
+// ===== 検索機能 =====
+function setupSearch() {
+    // PC用検索
+    const headerSearchBtn = document.getElementById('header-search-btn');
+    const headerSearchInput = document.getElementById('header-search-input');
+    
+    // モバイル用検索トグル
+    const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+    const mobileSearchExpanded = document.getElementById('mobile-search-expanded');
+    const mobileSearchBtn = document.getElementById('mobile-search-btn');
+    const mobileSearchInput = document.getElementById('mobile-search-input');
+    
+    // 検索実行関数
+    function executeSearch(keyword) {
+        if (!keyword || keyword.trim() === '') {
+            alert('検索キーワードを入力してください');
+            return;
+        }
+        
+        // properties.htmlに遷移して検索パラメータを渡す
+        window.location.href = `properties.html?search=${encodeURIComponent(keyword.trim())}`;
+    }
+    
+    // PC用検索ボタン
+    if (headerSearchBtn && headerSearchInput) {
+        headerSearchBtn.addEventListener('click', () => {
+            executeSearch(headerSearchInput.value);
+        });
+        
+        headerSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                executeSearch(headerSearchInput.value);
+            }
+        });
+    }
+    
+    // モバイル用検索トグル
+    if (mobileSearchToggle && mobileSearchExpanded) {
+        mobileSearchToggle.addEventListener('click', () => {
+            const isExpanded = mobileSearchExpanded.classList.toggle('active');
+            mobileSearchToggle.setAttribute('aria-expanded', isExpanded);
+            
+            if (isExpanded && mobileSearchInput) {
+                setTimeout(() => {
+                    mobileSearchInput.focus();
+                }, 300);
+            }
+        });
+        
+        // モバイル検索実行
+        if (mobileSearchBtn && mobileSearchInput) {
+            mobileSearchBtn.addEventListener('click', () => {
+                executeSearch(mobileSearchInput.value);
+            });
+            
+            mobileSearchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    executeSearch(mobileSearchInput.value);
+                }
+            });
+        }
+        
+        // モバイル検索バー外をクリックしたら閉じる
+        document.addEventListener('click', (e) => {
+            if (mobileSearchExpanded.classList.contains('active') &&
+                !mobileSearchExpanded.contains(e.target) &&
+                !mobileSearchToggle.contains(e.target)) {
+                mobileSearchExpanded.classList.remove('active');
+                mobileSearchToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+}
+
+// ページ読み込み時に検索機能を初期化
+document.addEventListener('DOMContentLoaded', setupSearch);
+
 // スムーススクロール
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -92,56 +169,6 @@ document.querySelectorAll('.property-card, .feature-card').forEach(card => {
     
     card.addEventListener('mouseleave', () => {
         card.style.transform = '';
-    });
-});
-
-// ハンバーガーメニュー機能
-document.addEventListener('DOMContentLoaded', () => {
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    const navOverlay = document.getElementById('nav-overlay');
-    const body = document.body;
-    
-    // メニューを開く/閉じる関数
-    function toggleMenu() {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        navOverlay.classList.toggle('active');
-        body.classList.toggle('menu-open');
-    }
-    
-    // ハンバーガーアイコンをクリックした時
-    hamburger.addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleMenu();
-    });
-    
-    // オーバーレイをクリックした時（メニューを閉じる）
-    navOverlay.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
-        navOverlay.classList.remove('active');
-        body.classList.remove('menu-open');
-    });
-    
-    // メニュー内のリンクをクリックした時（メニューを閉じる）
-    navMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-            navOverlay.classList.remove('active');
-            body.classList.remove('menu-open');
-        });
-    });
-    
-    // ESCキーでメニューを閉じる
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-            navOverlay.classList.remove('active');
-            body.classList.remove('menu-open');
-        }
     });
 });
 
@@ -268,49 +295,90 @@ document.addEventListener('DOMContentLoaded', () => {
 
 console.log('✨ Frejuno Gallery Experience loaded');
 
-// ハンバーガーメニュー
+// ===== ハンバーガーメニュー（改善版） =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Hamburger menu initializing...');
+    console.log('Hamburger menu initializing (improved)...');
     
     const hamburger = document.getElementById('hamburger');
     const navMobileMenu = document.querySelector('.nav-mobile-menu');
     const navOverlay = document.getElementById('nav-overlay');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
     const body = document.body;
     
     console.log('hamburger:', hamburger);
     console.log('navMobileMenu:', navMobileMenu);
     console.log('navOverlay:', navOverlay);
+    console.log('mobileMenuClose:', mobileMenuClose);
     
-    if (hamburger && navMobileMenu) {
-        // ハンバーガーアイコンをクリック
-        hamburger.addEventListener('click', function(e) {
-            console.log('Hamburger clicked!');
-            hamburger.classList.toggle('active');
-            navMobileMenu.classList.toggle('active');
-            navOverlay.classList.toggle('active');
-            body.classList.toggle('menu-open');
-        });
-        
-        // オーバーレイをクリック
-        if (navOverlay) {
-            navOverlay.addEventListener('click', function() {
-                hamburger.classList.remove('active');
-                navMobileMenu.classList.remove('active');
-                navOverlay.classList.remove('active');
-                body.classList.remove('menu-open');
-            });
-        }
-        
-        // メニュー項目をクリックしたら閉じる
-        navMobileMenu.querySelectorAll('a').forEach(function(link) {
-            link.addEventListener('click', function() {
-                hamburger.classList.remove('active');
-                navMobileMenu.classList.remove('active');
-                navOverlay.classList.remove('active');
-                body.classList.remove('menu-open');
-            });
-        });
-    } else {
-        console.error('Hamburger menu elements not found!');
+    if (!hamburger || !navMobileMenu || !navOverlay) {
+        console.error('Required menu elements not found!');
+        return;
     }
+    
+    // メニューを開く/閉じる関数
+    function toggleMenu(forceClose = false) {
+        const isActive = navMobileMenu.classList.contains('active');
+        
+        if (forceClose || isActive) {
+            // メニューを閉じる
+            hamburger.classList.remove('active');
+            navMobileMenu.classList.remove('active');
+            navOverlay.classList.remove('active');
+            body.classList.remove('menu-open');
+            hamburger.setAttribute('aria-label', 'メニューを開く');
+            navOverlay.setAttribute('aria-hidden', 'true');
+        } else {
+            // メニューを開く
+            hamburger.classList.add('active');
+            navMobileMenu.classList.add('active');
+            navOverlay.classList.add('active');
+            body.classList.add('menu-open');
+            hamburger.setAttribute('aria-label', 'メニューを閉じる');
+            navOverlay.setAttribute('aria-hidden', 'false');
+        }
+    }
+    
+    // ハンバーガーアイコンをクリック
+    hamburger.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Hamburger clicked!');
+        toggleMenu();
+    });
+    
+    // キーボードでハンバーガーアイコンを操作
+    hamburger.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleMenu();
+        }
+    });
+    
+    // 閉じるボタンをクリック
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', function() {
+            toggleMenu(true);
+        });
+    }
+    
+    // オーバーレイをクリック
+    navOverlay.addEventListener('click', function() {
+        toggleMenu(true);
+    });
+    
+    // メニュー項目をクリックしたら閉じる
+    navMobileMenu.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() {
+            toggleMenu(true);
+        });
+    });
+    
+    // ESCキーでメニューを閉じる
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMobileMenu.classList.contains('active')) {
+            toggleMenu(true);
+        }
+    });
+    
+    console.log('✅ Hamburger menu improved version loaded');
 });

@@ -146,8 +146,16 @@
         </div>
     </footer>
 
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsxmS0TYlKgGB0jQ9sZvc-FES-Ge_DQGI&libraries=places&language=ja"></script>
+    <!-- Google Maps API (loaded dynamically from environment) -->
+    <script>
+        // Load Google Maps API with key from environment
+        const apiKey = window.GOOGLE_API_KEY || '';
+        if (apiKey) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
+            document.head.appendChild(script);
+        }
+    </script>
     
     <script src="js/config.js"></script>
     <script src="js/properties.js"></script>

@@ -2,8 +2,8 @@
 // Google Maps/Places API設定
 
 const CONFIG = {
-    // Google Maps API Key
-    GOOGLE_API_KEY: 'AIzaSyBsxmS0TYlKgGB0jQ9sZvc-FES-Ge_DQGI',
+    // Google Maps API Key (environment variable)
+    GOOGLE_API_KEY: import.meta.env.VITE_GOOGLE_API_KEY || '',
     
     // 会社情報
     COMPANY: {
