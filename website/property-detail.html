@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>松山市 鷹子町 3SLDK - 株式会社Frejuno</title>
+    <meta name="description" content="松山市鷹子町の中古一戸建て。3SLDK、オール電化、駐車場2台分。¥2,530万円。">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        .property-detail-hero {
+            background-color: var(--color-gray);
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .property-gallery {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            min-height: 600px;
+        }
+        
+        .gallery-main {
+            position: relative;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .gallery-main img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .gallery-thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        
+        .gallery-thumbnails::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .gallery-thumbnails::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .gallery-thumbnails::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 3px;
+        }
+        
+        .gallery-thumbnails::-webkit-scrollbar-thumb:hover {
+            background: var(--color-secondary);
+        }
+        
+        .gallery-thumbnail {
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .gallery-thumbnail:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .gallery-thumbnail.active {
+            border-color: var(--color-primary);
+            box-shadow: 0 5px 15px rgba(201, 168, 124, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .property-gallery {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .gallery-main {
+                height: auto;
+            }
+            
+            .gallery-main img {
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+            }
+            
+            .gallery-thumbnails {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding-right: 0;
+                padding-bottom: 0.5rem;
+            }
+            
+            .gallery-thumbnail {
+                min-width: 80px;
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+            }
+        }
+        
+        .property-main-info {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .property-description {
+            line-height: 1.8;
+        }
+        
+        .property-specs {
+            background-color: var(--color-gray);
+            padding: 2rem;
+            border-radius: 5px;
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .spec-value {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-badge {
+            background-color: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+        
+        .contact-cta {
+            background: linear-gradient(135deg, #C9A87C, #A48B6F);
+            color: white;
+            padding: 3rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .contact-cta h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .property-main-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="Frejuno"></a></h1>
+                
+                <!-- ハンバーガーメニューアイコン -->
+                    <div class="hamburger" id="hamburger" role="button" aria-label="メニューを開く" tabindex="0">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- モバイル用検索バー（展開式） -->
+        <div class="mobile-search-expanded" id="mobile-search-expanded" role="search" aria-label="モバイル物件検索">
+            <div class="container">
+                <div class="header-search-bar">
+                    <input 
+                        type="text" 
+                        id="mobile-search-input" 
+                        placeholder="エリア・駅名で検索..." 
+                        aria-label="モバイル検索キーワード入力"
+                    />
+                    <button 
+                        class="header-search-btn" 
+                        id="mobile-search-btn" 
+                        aria-label="モバイル検索実行"
+                        type="button"
+                    >
+                        
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- モバイル用ナビゲーション -->
+    <nav class="nav-mobile" role="navigation" aria-label="モバイルメニュー">
+        <ul class="nav-mobile-menu" id="nav-mobile-menu">
+            <li><a href="index.html">トップ</a></li>
+            <li><a href="properties.html">物件一覧</a></li>
+            <li><a href="about.html">会社概要</a></li>
+            <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
+        </ul>
+        
+    </nav>
+
+    <!-- オーバーレイ -->
+    <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+    
+    <!-- 固定査定CTAボタン -->
+    <div class="fixed-assessment-cta" role="complementary" aria-label="査定依頼">
+        <a href="contact.html?service=assessment" aria-label="無料査定依頼ページへ">
+            <span class="icon">📋</span>
+            無料査定依頼
+        </a>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <section class="property-detail-hero">
+            <div class="container">
+                <h2 class="section-title" id="property-title">松山市 鷹子町 3SLDK</h2>
+                <p style="font-size: 2rem; color: var(--color-primary); font-weight: 500;" id="property-price">¥2,530万円</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <!-- ギャラリー -->
+                <div class="property-gallery" id="property-gallery">
+                    <!-- JavaScriptで動的に追加 -->
+                </div>
+
+                <!-- メイン情報 -->
+                <div class="property-main-info">
+                    <div>
+                        <h3 style="color: var(--color-primary); margin-bottom: 1.5rem;">物件概要</h3>
+                        <div class="property-description" id="property-description">
+                            <!-- JavaScriptで動的に追加 -->
+                        </div>
+
+                        <h3 style="color: var(--color-primary); margin: 2rem 0 1rem;">特徴</h3>
+                        <div class="features-grid" id="property-features">
+                            <!-- JavaScriptで動的に追加 -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="property-specs" id="property-specs">
+                            <!-- JavaScriptで動的に追加 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="contact-cta animate-fadeIn">
+                    <h3>この物件に関するお問い合わせ</h3>
+                    <p style="margin-bottom: 2rem;">詳しい情報や内見のご予約は、お気軽にご連絡ください。</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="contact.html" class="btn btn-primary">お問い合わせフォーム</a>
+                        <a href="tel:089-900-1382" class="btn btn-secondary">電話で問い合わせ</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 物件の位置 -->
+        <section style="background-color: var(--color-gray);">
+            <div class="container">
+                <h2 class="section-title">📍 物件の位置</h2>
+                <div id="property-map" style="width: 100%; height: 400px; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1); background-color: white;"></div>
+                <p id="property-address" style="margin-top: 1rem; text-align: center; color: #666;"></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>株式会社Frejuno</h4>
+                    <p>〒791-1114<br>愛媛県松山市井門町551-5</p>
+                    <p>TEL: 089-900-1382</p>
+                    <p>定休日：水曜日、年末年始、夏季休暇</p>
+                </div>
+                <div class="footer-section">
+                    <h4>免許・登録</h4>
+                    <p>愛媛県知事免許（１）第５８５４号</p>
+                    <p>(公社)全日本不動産協会会員</p>
+                    <p>四国地区不動産公正取引協議会加盟</p>
+                </div>
+                <div class="footer-section">
+                    <h4>リンク</h4>
+                    <ul>
+                        <li><a href="properties.html">物件一覧</a></li>
+                        <li><a href="about.html">会社概要</a></li>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 株式会社Frejuno. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Google Maps API (loaded dynamically from environment) -->
+    <script>
+        // Load Google Maps API with key from environment
+        const apiKey = window.GOOGLE_API_KEY || '';
+        if (apiKey) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
+            document.head.appendChild(script);
+        }
+    </script>
+    
+    <script src="js/config.js"></script>
+    <script src="js/properties.js"></script>
+    <script src="js/property-detail.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

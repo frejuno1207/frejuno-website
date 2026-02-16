@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>株式会社Frejuno - 松山市の不動産、信頼と実績</title>
+    <meta name="description" content="愛媛県松山市の不動産会社Frejuno。賃貸・売買・買取・リフォーム相談まで、地域密着型の安心サービス。土日営業、英語対応可。">
+    
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="Frejuno"></a></h1>
+                
+                <!-- ハンバーガーメニューアイコン -->
+                    <div class="hamburger" id="hamburger" role="button" aria-label="メニューを開く" tabindex="0">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- モバイル用検索バー（展開式） -->
+        <div class="mobile-search-expanded" id="mobile-search-expanded" role="search" aria-label="モバイル物件検索">
+            <div class="container">
+                <div class="header-search-bar">
+                    <input 
+                        type="text" 
+                        id="mobile-search-input" 
+                        placeholder="エリア・駅名で検索..." 
+                        aria-label="モバイル検索キーワード入力"
+                    />
+                    <button 
+                        class="header-search-btn" 
+                        id="mobile-search-btn" 
+                        aria-label="モバイル検索実行"
+                        type="button"
+                    >
+                        🔍
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- モバイル用ナビゲーション -->
+    <nav class="nav-mobile" role="navigation" aria-label="モバイルメニュー">
+        <ul class="nav-mobile-menu" id="nav-mobile-menu">
+            <li><a href="#top">トップ</a></li>
+            <li><a href="properties.html">物件一覧</a></li>
+            <li><a href="about.html">会社概要</a></li>
+            <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
+        </ul>
+        
+    </nav>
+
+    <!-- オーバーレイ -->
+    <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+    
+    <!-- 固定査定CTAボタン -->
+    <div class="fixed-assessment-cta" role="complementary" aria-label="査定依頼">
+        <a href="contact.html?service=assessment" aria-label="無料査定依頼ページへ">
+            <span class="icon">📋</span>
+            無料査定依頼
+        </a>
+    </div>
+
+    <!-- ヒーローセクション -->
+    <section class="hero-section" id="top">
+        <div class="hero-bg hero-bg-1"></div>
+        <div class="hero-bg hero-bg-2"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h2 class="hero-title animate-fadeInUp">松山の記憶と<br>一人ひとりに寄り添う<br>不動産のFrejuno</h2>
+            <p class="hero-subtitle animate-fadeInUp delay-200"></p>
+            <div class="hero-buttons animate-fadeInUp delay-400">
+                <a href="properties.html" class="btn btn-primary">物件を探す</a>
+                <a href="contact.html" class="btn btn-secondary">お問い合わせ</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 強み -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Frejunoの強み</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>土日も営業</h3>
+                    <p>お客様のご都合に合わせて、土日もご対応いたします</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>スピード査定</h3>
+                    <p>迅速かつ正確な査定で、スムーズな取引をサポート</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>英語対応可</h3>
+                    <p>English available. 外国人のお客様も安心してご相談ください</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>女性スタッフ対応</h3>
+                    <p>女性スタッフによる丁寧なご案内も可能です</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚗</div>
+                    <h3>送迎サービス</h3>
+                    <p>駅からの送迎サービスで、物件見学もスムーズ</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏠</div>
+                    <h3>買取・リフォーム</h3>
+                    <p>買取からリフォーム相談まで、ワンストップで対応</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- サービス -->
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title">サービス</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>賃貸物件</h3>
+                    <p>アパート・マンション・戸建の賃貸物件を多数ご用意</p>
+                    <a href="properties.html?type=rent" class="btn-link">物件を見る →</a>
+                </div>
+                <div class="service-card">
+                    <h3>売買物件</h3>
+                    <p>中古マンション・戸建・土地の売買をサポート</p>
+                    <a href="properties.html?type=sale" class="btn-link">物件を見る →</a>
+                </div>
+                <div class="service-card">
+                    <h3>買取・査定</h3>
+                    <p>スピード査定で、周囲に知られずに売却可能</p>
+                    <a href="contact.html?service=assessment" class="btn-link">査定依頼 →</a>
+                </div>
+                <div class="service-card">
+                    <h3>リフォーム相談</h3>
+                    <p>インスペクションからリフォームまで、ご相談ください</p>
+                    <a href="contact.html?service=reform" class="btn-link">相談する →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- おすすめ物件 -->
+    <section class="recommended-properties">
+        <div class="container">
+            <h2 class="section-title">おすすめ物件</h2>
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div class="property-card">
+                    <div class="property-image" style="width: 100%; height: 250px; background-image: url('images/property-takako-exterior-1.jpg'); background-size: cover; background-position: center;"></div>
+                    <div class="property-info">
+                        <div class="property-price">¥2,530万円</div>
+                        <div class="property-title">松山市 鷹子町 3SLDK</div>
+                        <div class="property-details">
+                            3SLDK | 建物84.45㎡ / 土地105.22㎡ | 築20年<br>
+                            鷹ノ子駅 徒歩13分
+                        </div>
+                        <div class="property-tags">
+                            <span class="property-tag">駐車場２台分</span>
+                            <span class="property-tag">オール電化</span>
+                            <span class="property-tag">全室2面採光</span>
+                            <span class="property-tag">閑静な住宅街</span>
+                            <span class="property-tag">カウンターキッチン</span>
+                        </div>
+                        <a href="property-detail.html?id=1" class="property-card-cta">
+                            詳細を見る
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center" style="margin-top: 3rem;">
+                <a href="properties.html" class="btn btn-primary">すべての物件を見る</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>株式会社Frejuno</h4>
+                    <p>〒791-1114<br>愛媛県松山市井門町551-5</p>
+                    <p>TEL: 089-900-1382</p>
+                    <p>定休日：水曜日、年末年始、夏季休暇</p>
+                </div>
+                <div class="footer-section">
+                    <h4>免許・登録</h4>
+                    <p>愛媛県知事免許（１）第５８５４号</p>
+                    <p>(公社)全日本不動産協会会員</p>
+                    <p>四国地区不動産公正取引協議会加盟</p>
+                </div>
+                <div class="footer-section">
+                    <h4>リンク</h4>
+                    <ul>
+                        <li><a href="properties.html">物件一覧</a></li>
+                        <li><a href="about.html">会社概要</a></li>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 株式会社Frejuno. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/properties.js"></script>
+    <script>
+        // トップページのおすすめ物件表示
+        window.addEventListener('load', () => {
+            console.log('Loading recommended properties...');
+            const container = document.getElementById('recommended-properties');
+            
+            if (!container) {
+                console.error('Container not found');
+                return;
+            }
+            
+            if (typeof properties === 'undefined') {
+                console.error('Properties undefined');
+                container.innerHTML = '<p style="text-align: center; color: #666;">物件データを読み込み中...</p>';
+                return;
+            }
+            
+            console.log('Properties found:', properties.length);
+            
+            // 最新物件を表示（現在1件の場合は1件のみ、将来複数あれば最大3件）
+            const recommendedProperties = properties.slice(0, Math.min(properties.length, 3));
+            
+            if (recommendedProperties.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">現在、掲載可能な物件はありません。</p>';
+                return;
+            }
+            
+            // 1件の場合は中央寄せの大きめカード、複数の場合はグリッド
+            const isSingle = recommendedProperties.length === 1;
+            const wrapperClass = isSingle ? '' : 'properties-grid';
+            
+            container.innerHTML = `
+                <div class="${wrapperClass}">
+                    ${recommendedProperties.map(property => {
+                const priceDisplay = property.type.includes('売') 
+                    ? `¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円` 
+                    : `¥${property.price.toLocaleString()}/月`;
+                
+                const ageDisplay = property.age === 0 ? '土地' : `築${property.age}年`;
+                const landInfo = property.landArea ? ` / 土地${property.landArea}㎡` : '';
+                
+                return `
+                    <div class="property-card" style="max-width: 400px; cursor: pointer;" onclick="location.href='property-detail.html?id=${property.id}'">
+                        <div class="property-image" style="background-image: url('${property.image}'); background-size: cover; background-position: center; height: 250px;">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">${priceDisplay}</div>
+                            <div class="property-title">${property.title}</div>
+                            <div class="property-details">
+                                ${property.layout} | 建物${property.area}㎡${landInfo} | ${ageDisplay}<br>
+                                ${property.station} 徒歩${property.walk}分
+                            </div>
+                            <div class="property-tags">
+                                ${property.features.slice(0, 5).map(f => `<span class="property-tag">${f}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    `).join('')}
+                </div>
+            `;
+        });
+    </script>
+    
+    <!-- Google Maps API (loaded dynamically from environment) -->
+    <script>
+        // Load Google Maps API with key from environment
+        const apiKey = window.GOOGLE_API_KEY || '';
+        if (apiKey) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
+            document.head.appendChild(script);
+        }
+    </script>
+    
+    <!-- 他のJavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/maps.js"></script>
+    <script src="js/hero-slider.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
