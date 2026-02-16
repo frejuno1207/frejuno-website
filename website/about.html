@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会社概要 - 株式会社Frejuno</title>
+    <meta name="description" content="株式会社Frejunoの会社概要。愛媛県松山市で不動産業を営んでいます。">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="Frejuno"></a></h1>
+                
+                <nav class="nav">
+                    <!-- モバイル用検索トグルボタン -->
+                    <button 
+                        class="mobile-search-toggle" 
+                        id="mobile-search-toggle" 
+                        aria-label="検索を開く"
+                        aria-expanded="false"
+                    >
+                        🔍
+                    </button>
+                    
+                    <ul>
+                        <li><a href="index.html">トップ</a></li>
+                        <li><a href="properties.html">物件一覧</a></li>
+                        <li><a href="about.html">会社概要</a></li>
+                        <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
+                    </ul>
+                    
+                    <!-- ハンバーガーメニューアイコン -->
+                    <div class="hamburger" id="hamburger" role="button" aria-label="メニューを開く" tabindex="0">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- モバイル用検索バー（展開式） -->
+        <div class="mobile-search-expanded" id="mobile-search-expanded" role="search" aria-label="モバイル物件検索">
+            <div class="container">
+                <div class="header-search-bar">
+                    <input 
+                        type="text" 
+                        id="mobile-search-input" 
+                        placeholder="エリア・駅名で検索..." 
+                        aria-label="モバイル検索キーワード入力"
+                    />
+                    <button 
+                        class="header-search-btn" 
+                        id="mobile-search-btn" 
+                        aria-label="モバイル検索実行"
+                        type="button"
+                    >
+                        🔍
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- モバイル用ナビゲーション -->
+    <nav class="nav-mobile" role="navigation" aria-label="モバイルメニュー">
+        <ul class="nav-mobile-menu" id="nav-mobile-menu">
+            <li><a href="index.html">トップ</a></li>
+            <li><a href="properties.html">物件一覧</a></li>
+            <li><a href="about.html">会社概要</a></li>
+            <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
+        </ul>
+        <button class="mobile-menu-close" id="mobile-menu-close" aria-label="メニューを閉じる">×</button>
+    </nav>
+
+    <!-- オーバーレイ -->
+    <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+    
+    
+
+    <!-- メインコンテンツ -->
+    <main>
+        <section class="about-hero" style="background-color: var(--color-gray); padding: 3rem 0; text-align: center;">
+            <div class="container">
+                <h2 class="section-title">会社概要</h2>
+                <p>地域に根ざした信頼の不動産会社</p>
+            </div>
+        </section>
+
+        <!-- 代表挨拶 -->
+        <section>
+            <div class="container">
+                <h3 style="font-size: 2rem; color: var(--color-primary); margin-bottom: 3rem; text-align: center;">代表挨拶</h3>
+                
+                <!-- 代表プロフィール -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; max-width: 1000px; margin: 0 auto;">
+                    
+                    <!-- 代表取締役 -->
+                    <div style="text-align: center; padding: 2rem; background-color: white; border-radius: 10px; box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);">
+                        <img src="images/ceo-ai-portrait.jpg" alt="代表取締役 小澤美紀" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; margin: 0 auto 1.5rem; display: block; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <p style="font-size: 0.9rem; color: var(--color-secondary); margin-bottom: 0.5rem; letter-spacing: 0.1em;">代表取締役</p>
+                        <h4 style="font-size: 1.5rem; color: var(--color-text); margin-bottom: 1.5rem; font-weight: 600;">小澤 美紀</h4>
+                        <p style="line-height: 1.8; text-align: left; color: #666;">
+                            株式会社Frejunoのホームページをご覧いただき、誠にありがとうございます。<br><br>
+                            私たちは愛媛県松山市を拠点に、地域の皆様に寄り添った不動産サービスを提供しております。<br><br>
+                            お客様一人ひとりのご要望に真摯に向き合い、最適な提案をさせていただくことをお約束いたします。
+                        </p>
+                    </div>
+                    
+                    <!-- 取締役 -->
+                    <div style="text-align: center; padding: 2rem; background-color: white; border-radius: 10px; box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);">
+                        <img src="images/director-portrait-ai.jpg" alt="取締役 小澤優己介" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; margin: 0 auto 1.5rem; display: block; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <p style="font-size: 0.9rem; color: var(--color-secondary); margin-bottom: 0.5rem; letter-spacing: 0.1em;">取締役</p>
+                        <h4 style="font-size: 1.5rem; color: var(--color-text); margin-bottom: 1.5rem; font-weight: 600;">小澤 優己介</h4>
+                        <p style="line-height: 1.8; text-align: left; color: #666;">
+                            「松山の記憶」を大切に、一人ひとりのお客様に寄り添う不動産サービスを目指します。<br><br>
+                            地域に根差した新しい形の住まい探しを通じて、皆様の暮らしをサポートいたします。<br><br>
+                            どうぞお気軽にご相談ください。
+                        </p>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- 会社情報 -->
+        <section style="background-color: var(--color-gray);">
+            <div class="container">
+                <h3 style="font-size: 1.5rem; color: var(--color-primary); margin-bottom: 2rem;">会社情報</h3>
+                <table style="width: 100%; max-width: 800px; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="text-align: left; padding: 1rem; background-color: white; width: 30%;">商号</th>
+                        <td style="padding: 1rem;">株式会社Frejuno</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="text-align: left; padding: 1rem; background-color: white;">代表者</th>
+                        <td style="padding: 1rem;">小澤美紀</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="text-align: left; padding: 1rem; background-color: white;">資本金</th>
+                        <td style="padding: 1rem;">100万円</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="text-align: left; padding: 1rem; background-color: white;">設立</th>
+                        <td style="padding: 1rem;">2025年6月17日</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="text-align: left; padding: 1rem; background-color: white;">所在地</th>
+                        <td style="padding: 1rem;">〒791-1114 愛媛県松山市井門町551-5</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="text-align: left; padding: 1rem; background-color: white;">電話番号</th>
+                        <td style="padding: 1rem;">089-900-1382</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="text-align: left; padding: 1rem; background-color: white;">免許番号</th>
+                        <td style="padding: 1rem;">愛媛県知事免許（１）第５８５４号</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="text-align: left; padding: 1rem; background-color: white;">所属団体</th>
+                        <td style="padding: 1rem;">
+                            (公社)全日本不動産協会会員<br>
+                            四国地区不動産公正取引協議会加盟
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <th style="text-align: left; padding: 1rem; background-color: white;">最寄駅</th>
+                        <td style="padding: 1rem;">伊予鉄道横河原線 いよ立花駅</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; padding: 1rem; background-color: white;">定休日</th>
+                        <td style="padding: 1rem;">水曜日、年末年始、夏季休暇</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- アクセスマップ -->
+        <section>
+            <div class="container">
+                <h3 style="font-size: 1.5rem; color: var(--color-primary); margin-bottom: 2rem;">アクセス</h3>
+                <a href="https://www.google.com/maps/place/33.8012157,132.7834707" 
+                   target="_blank" 
+                   style="text-decoration: none;">
+                    <div style="width: 100%; height: 400px; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1); position: relative; cursor: pointer;">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3270.123456789!2d132.7834707!3d33.8012157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x354fefea9a9fb40d%3A0x96a6cfa84ab6eb53!2z44CA44CSNzkxLTExMTQt5pW955S65YqX5rGf5Yy65YqX5Y6f77yT5LiB55uu77yT4oiS77yR!5e0!3m2!1sja!2sjp!4v1700000000000!5m2!1sja!2sjp" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                        <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 10px 20px; border-radius: 25px; font-size: 0.9rem;">
+                            タップしてGoogleマップで開く →
+                        </div>
+                    </div>
+                </a>
+                <p style="margin-top: 1rem; color: #666;">
+                    <strong>住所:</strong> 〒791-1114 愛媛県松山市井門町551-5<br>
+                    <strong>最寄駅:</strong> 伊予鉄道横河原線 いよ立花駅<br>
+                    駐車場完備・送迎サービスあり
+                </p>
+            </div>
+        </section>
+
+        <!-- 対応エリア -->
+        <section style="background-color: var(--color-gray);">
+            <div class="container">
+                <h3 style="font-size: 1.5rem; color: var(--color-primary); margin-bottom: 2rem;">対応エリア</h3>
+                <p>松山市を中心に、愛媛県内全域に対応しております。<br>
+                エリア外の場合もお気軽にご相談ください。</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>株式会社Frejuno</h4>
+                    <p>〒791-1114<br>愛媛県松山市井門町551-5</p>
+                    <p>TEL: 089-900-1382</p>
+                    
+                    
+                    <p>定休日：水曜日、年末年始、夏季休暇</p>
+                </div>
+                <div class="footer-section">
+                    <h4>免許・登録</h4>
+                    <p>愛媛県知事免許（１）第５８５４号</p>
+                    <p>(公社)全日本不動産協会会員</p>
+                    <p>四国地区不動産公正取引協議会加盟</p>
+                </div>
+                <div class="footer-section">
+                    <h4>リンク</h4>
+                    <ul>
+                        <li><a href="properties.html">物件一覧</a></li>
+                        <li><a href="about.html">会社概要</a></li>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 株式会社Frejuno. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Google Maps API (loaded dynamically from environment) -->
+    <script>
+        // Load Google Maps API with key from environment
+        const apiKey = window.GOOGLE_API_KEY || '';
+        if (apiKey) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
+            document.head.appendChild(script);
+        }
+    </script>
+    
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/maps.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
