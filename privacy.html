@@ -20,6 +20,12 @@
                         <li><a href="about.html">会社概要</a></li>
                         <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
                     </ul>
+                        <!-- ハンバーガーメニューアイコン -->
+                    <div class="hamburger" id="hamburger" role="button" aria-label="メニューを開く" tabindex="0">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                     <!-- ハンバーガーメニューアイコン -->
                     <div class="hamburger" id="hamburger">
                         <span></span>
@@ -29,6 +35,32 @@
                 </nav>
             </div>
         </div>
+    
+    <!-- ハンバーガーメニューアイコン -->
+    <div class="hamburger" id="hamburger" role="button" aria-label="メニューを開く" tabindex="0">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <nav class="nav-mobile" role="navigation" aria-label="モバイルメニュー">
+        <ul class="nav-mobile-menu" id="nav-mobile-menu">
+            <li><a href="index.html">トップ</a></li>
+            <li><a href="properties.html">物件一覧</a></li>
+            <li><a href="about.html">会社概要</a></li>
+            <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
+        </ul>
+        <button class="mobile-menu-close" id="mobile-menu-close" aria-label="メニューを閉じる">×</button>
+    </nav>
+
+    <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+
+    <div class="fixed-assessment-cta" role="complementary" aria-label="査定依頼">
+        <a href="contact.html?service=assessment" aria-label="無料査定依頼ページへ">
+            <span class="icon">📋</span>
+            無料査定依頼
+        </a>
+    </div>
     </header>
 
     <!-- オーバーレイ -->
