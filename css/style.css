@@ -958,19 +958,6 @@ section {
     .nav > ul {
         display: none !important;
     }
-    
-    /* 768px以上ではPCメニューを表示 */
-    @media (min-width: 769px) {
-        .nav > ul {
-            display: flex !important;
-        }
-        .hamburger {
-            display: none !important;
-        }
-        .nav-mobile {
-            display: none !important;
-        }
-    }
 
     .nav-mobile-menu li {
         width: 100%;
@@ -1111,6 +1098,19 @@ section {
 
     .section-title {
         font-size: 1.8rem;
+    }
+}
+
+/* デスクトップ（769px以上）ではPCメニューを表示、ハンバーガーを非表示 */
+@media (min-width: 769px) {
+    .nav > ul {
+        display: flex !important;
+    }
+    .hamburger {
+        display: none !important;
+    }
+    .nav-mobile {
+        display: none !important;
     }
 }
 
