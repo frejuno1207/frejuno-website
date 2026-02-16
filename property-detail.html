@@ -40,18 +40,19 @@
         
         .gallery-thumbnails {
             display: flex;
-            flex-wrap: nowrap;
+            flex-direction: column;
             gap: 0.8rem;
             margin-top: 1rem;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding-bottom: 10px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: 600px;
+            padding-right: 10px;
             scrollbar-width: thin;
             scrollbar-color: var(--color-primary) #f1f1f1;
         }
         
         .gallery-thumbnails::-webkit-scrollbar {
-            height: 6px;
+            width: 6px;
         }
         
         .gallery-thumbnails::-webkit-scrollbar-track {
@@ -69,8 +70,7 @@
         }
         
         .gallery-thumbnail {
-            width: 120px;
-            flex-shrink: 0;
+            width: 100%;
             aspect-ratio: 4/3;
             object-fit: cover;
             border-radius: 5px;
