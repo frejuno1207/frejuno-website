@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物件一覧 - 株式会社Frejuno</title>
+    <meta name="description" content="松山市の賃貸・売買物件一覧。アパート、マンション、戸建など多数ご用意しております。">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="Frejuno"></a></h1>
+                <nav class="nav">
+                    <ul class="nav-menu">
+                        <li><a href="index.html">トップ</a></li>
+                        <li><a href="properties.html">物件一覧</a></li>
+                        <li><a href="about.html">会社概要</a></li>
+                        <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
+                    </ul>
+                    <!-- ハンバーガーメニューアイコン -->
+                    <div class="hamburger" id="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- オーバーレイ -->
+    <div class="nav-overlay" id="nav-overlay"></div>
+    <!-- モバイルナビゲーション -->
+    <nav class="nav-mobile" role="navigation" aria-label="モバイルメニュー">
+        <ul class="nav-mobile-menu" id="nav-mobile-menu">
+            <li><a href="index.html">トップ</a></li>
+            <li><a href="properties.html">物件一覧</a></li>
+            <li><a href="about.html">会社概要</a></li>
+            <li><a href="contact.html" class="btn-contact">お問い合わせ</a></li>
+        </ul>
+        <button class="mobile-menu-close" id="mobile-menu-close" aria-label="メニューを閉じる">×</button>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <section class="properties-hero" style="background-color: var(--color-gray); padding: 3rem 0; text-align: center;">
+            <div class="container">
+                <h2 class="section-title">物件一覧</h2>
+                <p>あなたにぴったりの物件を見つけましょう</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <!-- 絞り込みフィルター -->
+                <div style="background-color: var(--color-gray); padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 1rem;">物件を絞り込む</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">物件種別</label>
+                            <select id="filter-type" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                                <option value="">すべて</option>
+                                <option value="賃貸アパート">賃貸アパート</option>
+                                <option value="賃貸マンション">賃貸マンション</option>
+                                <option value="賃貸戸建">賃貸戸建</option>
+                                <option value="売中古マンション">売中古マンション</option>
+                                <option value="売中古一戸建">売中古一戸建</option>
+                                <option value="売土地">売土地</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">価格帯</label>
+                            <select id="filter-price" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                                <option value="">すべて</option>
+                                <option value="0-50000">〜5万円</option>
+                                <option value="50000-70000">5万〜7万円</option>
+                                <option value="70000-100000">7万〜10万円</option>
+                                <option value="100000-">10万円〜</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">間取り</label>
+                            <select id="filter-layout" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                                <option value="">すべて</option>
+                                <option value="1R">1R</option>
+                                <option value="1K">1K</option>
+                                <option value="1DK">1DK</option>
+                                <option value="1LDK">1LDK</option>
+                                <option value="2K">2K</option>
+                                <option value="2DK">2DK</option>
+                                <option value="2LDK">2LDK</option>
+                                <option value="3LDK">3LDK以上</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: flex-end;">
+                            <button onclick="applyFilters()" class="btn btn-primary" style="width: 100%; padding: 0.5rem;">検索</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 物件一覧 -->
+                <div id="properties-count" style="margin-bottom: 1rem; color: #666;"></div>
+                <div class="properties-grid" id="properties-list">
+                    <!-- JavaScriptで物件を動的に追加 -->
+                </div>
+
+                <div id="no-results" style="display: none; text-align: center; padding: 3rem; color: #666;">
+                    <p style="font-size: 1.2rem;">該当する物件が見つかりませんでした。</p>
+                    <p>条件を変更して再度検索してください。</p>
+                </div>
+
+                <!-- 物件マップ -->
+                <div style="margin-top: 4rem;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 1rem; text-align: center;">📍 物件マップ</h3>
+                    <div id="properties-map" style="width: 100%; height: 500px; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1);"></div>
+                    <p style="margin-top: 1rem; text-align: center; color: #666; font-size: 0.9rem;">マーカーをクリックすると物件情報が表示されます</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>株式会社Frejuno</h4>
+                    <p>〒791-1114<br>愛媛県松山市井門町551-5</p>
+                    <p>TEL: 089-900-1382</p>
+                    <p>定休日：水曜日、年末年始、夏季休暇</p>
+                </div>
+                <div class="footer-section">
+                    <h4>免許・登録</h4>
+                    <p>愛媛県知事免許（１）第５８５４号</p>
+                    <p>(公社)全日本不動産協会会員</p>
+                    <p>四国地区不動産公正取引協議会加盟</p>
+                </div>
+                <div class="footer-section">
+                    <h4>リンク</h4>
+                    <ul>
+                        <li><a href="properties.html">物件一覧</a></li>
+                        <li><a href="about.html">会社概要</a></li>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 株式会社Frejuno. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Google Maps API (loaded dynamically from environment) -->
+    <script>
+        // Load Google Maps API with key from environment
+        const apiKey = window.GOOGLE_API_KEY || '';
+        if (apiKey) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
+            document.head.appendChild(script);
+        }
+    </script>
+    
+    <script src="js/config.js"></script>
+    <script src="js/properties.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
