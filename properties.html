@@ -159,7 +159,7 @@
     <!-- Google Maps API (loaded dynamically from environment) -->
     <script>
         // Load Google Maps API with key from environment
-        const apiKey = window.GOOGLE_API_KEY || 'AIzaSyBsxmS0TYlKgGB0jQ9sZvc-FES-Ge_DQGI';
+        const apiKey = window.GOOGLE_API_KEY || '';
         if (apiKey) {
             const script = document.createElement('script');
             script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
