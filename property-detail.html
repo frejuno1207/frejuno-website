@@ -40,13 +40,18 @@
         
         .gallery-thumbnails {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 0.8rem;
             margin-top: 1rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-primary) #f1f1f1;
         }
         
         .gallery-thumbnails::-webkit-scrollbar {
-            width: 6px;
+            height: 6px;
         }
         
         .gallery-thumbnails::-webkit-scrollbar-track {
@@ -64,7 +69,8 @@
         }
         
         .gallery-thumbnail {
-            width: 100%;
+            width: 120px;
+            flex-shrink: 0;
             aspect-ratio: 4/3;
             object-fit: cover;
             border-radius: 5px;
