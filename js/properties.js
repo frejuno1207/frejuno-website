@@ -63,21 +63,37 @@ const properties = [
     }
 ];
 
+function normalizeProperty(property) {
+    return {
+        ...property,
+        status: property.status || 'available',
+        statusLabel: property.statusLabel || '売約済み'
+    };
+}
+
+function isSoldProperty(property) {
+    return property.status === 'sold';
+}
+
+function formatPropertyPrice(property) {
+    return property.type.includes('売')
+        ? `¥${(property.price / 10000).toLocaleString(undefined, { maximumFractionDigits: 0 })}万円`
+        : `¥${property.price.toLocaleString()}/月`;
+}
+
+const normalizedProperties = properties.map(normalizeProperty);
+
 // 現在の物件リスト（フィルター適用後）
-let currentProperties = [...properties];
+let currentProperties = [...normalizedProperties];
 
 /**
  * 物件カードを生成
  */
 function createPropertyCard(property) {
-    const isSold = property.status === 'sold';
-    const statusLabel = property.statusLabel || '売約済み';
+    const isSold = isSoldProperty(property);
+    const statusLabel = property.statusLabel;
 
-    const priceDisplay = isSold
-        ? statusLabel
-        : property.type.includes('売')
-            ? `¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円`
-            : `¥${property.price.toLocaleString()}/月`;
+    const priceDisplay = formatPropertyPrice(property);
 
     const ageDisplay = property.age === 0 ? '土地' : `築${property.age}年`;
 
@@ -134,7 +150,7 @@ function applyFilters() {
     const priceFilter = document.getElementById('filter-price')?.value || '';
     const layoutFilter = document.getElementById('filter-layout')?.value || '';
     
-    currentProperties = properties.filter(property => {
+    currentProperties = normalizedProperties.filter(property => {
         // 種別フィルター
         if (typeFilter && property.type !== typeFilter) {
             return false;
@@ -213,7 +229,7 @@ function initPropertiesMap() {
     });
     
     // 各物件にマーカーを配置
-    properties.forEach(property => {
+    normalizedProperties.forEach(property => {
         if (property.lat && property.lng) {
             const marker = new google.maps.Marker({
                 position: { lat: property.lat, lng: property.lng },
@@ -227,13 +243,9 @@ function initPropertiesMap() {
                     <div style="padding: 10px; min-width: 200px;">
                         <h4 style="margin: 0 0 5px 0; font-size: 16px;">${property.title}</h4>
                         <p style="margin: 5px 0; font-size: 18px; font-weight: bold; color: #C9A87C;">
-                            ${property.status === 'sold'
-                                ? (property.statusLabel || '売約済み')
-                                : (property.type.includes('売')
-                                    ? '¥' + (property.price / 10000).toLocaleString() + '万円'
-                                    : '¥' + property.price.toLocaleString() + '/月')}
+                            ${formatPropertyPrice(property)}
                         </p>
-                        <p style="margin: 5px 0; color: #666; font-size: 14px;">${property.layout} | ${property.area}㎡</p>
+                        <p style="margin: 5px 0; color: #666; font-size: 14px;">${property.layout} | ${property.area}㎡${isSoldProperty(property) ? ' | 売約済み' : ''}</p>
                         <a href="property-detail.html?id=${property.id}" style="color: #C9A87C; text-decoration: none; font-weight: bold;">詳細を見る →</a>
                     </div>
                 `

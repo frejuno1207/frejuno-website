@@ -161,6 +161,32 @@
 
     <script src="js/main.js"></script>
     <script>
+        // URLパラメータから問い合わせ内容をプリセット
+        (function prefillContactFormFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            const service = params.get('service');
+            const status = params.get('status');
+
+            const subject = document.getElementById('subject');
+            const message = document.getElementById('message');
+
+            if (!subject || !message) return;
+
+            if (service === 'assessment') {
+                subject.value = '査定依頼';
+                if (!message.value) {
+                    message.value = '無料査定を希望します。\n物件情報：\n希望連絡方法：';
+                }
+            }
+
+            if (service === 'property' && status === 'sold') {
+                subject.value = '購入相談';
+                if (!message.value) {
+                    message.value = '売約済み物件を見てご連絡しました。\n同条件・近隣エリアの類似物件を紹介してください。\n希望条件：\nご予算：\n希望時期：';
+                }
+            }
+        })();
+
         document.getElementById('contact-form').addEventListener('submit', function(e) {
             e.preventDefault();
             

@@ -85,7 +85,8 @@ function initPropertyDetail() {
     // タイトルと価格
     document.getElementById('property-title').textContent = property.title;
 
-    const isSold = property.status === 'sold';
+    const normalizedStatus = property.status || 'available';
+    const isSold = normalizedStatus === 'sold';
     const statusLabel = property.statusLabel || '売約済み';
     const priceDisplay = isSold
         ? statusLabel
@@ -139,7 +140,7 @@ function initPropertyDetail() {
         <h3 style="color: var(--color-primary); margin-bottom: 1rem;">物件情報</h3>
         <div class="spec-item">
             <span class="spec-label">価格</span>
-            <span class="spec-value">${isSold && property.type.includes('売') ? `成約価格（表示価格） ¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円` : priceDisplay}</span>
+            <span class="spec-value">${isSold && property.type.includes('売') ? `掲載時価格 ¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円` : priceDisplay}</span>
         </div>
         <div class="spec-item">
             <span class="spec-label">間取り</span>
@@ -177,7 +178,11 @@ function initPropertyDetail() {
         </div>
         <div class="spec-item">
             <span class="spec-label">現況</span>
-            <span class="spec-value">${isSold ? statusLabel : property.condition}</span>
+            <span class="spec-value">${property.condition}</span>
+        </div>
+        <div class="spec-item">
+            <span class="spec-label">売買状況</span>
+            <span class="spec-value">${isSold ? statusLabel : '販売中'}</span>
         </div>
         <div class="spec-item">
             <span class="spec-label">引渡</span>
