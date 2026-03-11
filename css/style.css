@@ -537,6 +537,25 @@ section {
     display: block;
 }
 
+.property-status-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    background: #B22222;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.7rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.property-card.is-sold .property-image img {
+    filter: saturate(0.8) brightness(0.92);
+}
+
 .property-info {
     padding: 1.5rem;
 }
@@ -546,6 +565,10 @@ section {
     font-weight: bold;
     color: #A48B6F;
     margin-bottom: 0.5rem;
+}
+
+.property-price.is-sold {
+    color: #B22222;
 }
 
 .property-title {

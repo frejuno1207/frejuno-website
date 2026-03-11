@@ -5,6 +5,9 @@ const properties = [
         type: '売中古一戸建',
         title: '松山市 鷹子町 3SLDK',
         price: 25300000,
+        status: 'sold',
+        statusLabel: '売約済み',
+        soldDate: '2026年3月',
         layout: '3SLDK',
         area: 84.45,
         age: 20,
@@ -67,21 +70,28 @@ let currentProperties = [...properties];
  * 物件カードを生成
  */
 function createPropertyCard(property) {
-    const priceDisplay = property.type.includes('売') 
-        ? `¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円` 
-        : `¥${property.price.toLocaleString()}/月`;
-    
+    const isSold = property.status === 'sold';
+    const statusLabel = property.statusLabel || '売約済み';
+
+    const priceDisplay = isSold
+        ? statusLabel
+        : property.type.includes('売')
+            ? `¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円`
+            : `¥${property.price.toLocaleString()}/月`;
+
     const ageDisplay = property.age === 0 ? '土地' : `築${property.age}年`;
-    
+
     const landInfo = property.landArea ? ` / 土地${property.landArea}㎡` : '';
-    
+    const statusBadge = isSold ? `<span class="property-status-badge">${statusLabel}</span>` : '';
+
     return `
-        <div class="property-card" onclick="location.href='property-detail.html?id=${property.id}'">
+        <div class="property-card ${isSold ? 'is-sold' : ''}" onclick="location.href='property-detail.html?id=${property.id}'">
             <div class="property-image">
+                ${statusBadge}
                 <img src="${property.image}" alt="${property.title}">
             </div>
             <div class="property-info">
-                <div class="property-price">${priceDisplay}</div>
+                <div class="property-price ${isSold ? 'is-sold' : ''}">${priceDisplay}</div>
                 <div class="property-title">${property.title}</div>
                 <div class="property-details">
                     ${property.layout} | 建物${property.area}㎡${landInfo} | ${ageDisplay}<br>
@@ -217,7 +227,11 @@ function initPropertiesMap() {
                     <div style="padding: 10px; min-width: 200px;">
                         <h4 style="margin: 0 0 5px 0; font-size: 16px;">${property.title}</h4>
                         <p style="margin: 5px 0; font-size: 18px; font-weight: bold; color: #C9A87C;">
-                            ${property.type.includes('売') ? '¥' + (property.price / 10000).toLocaleString() + '万円' : '¥' + property.price.toLocaleString() + '/月'}
+                            ${property.status === 'sold'
+                                ? (property.statusLabel || '売約済み')
+                                : (property.type.includes('売')
+                                    ? '¥' + (property.price / 10000).toLocaleString() + '万円'
+                                    : '¥' + property.price.toLocaleString() + '/月')}
                         </p>
                         <p style="margin: 5px 0; color: #666; font-size: 14px;">${property.layout} | ${property.area}㎡</p>
                         <a href="property-detail.html?id=${property.id}" style="color: #C9A87C; text-decoration: none; font-weight: bold;">詳細を見る →</a>

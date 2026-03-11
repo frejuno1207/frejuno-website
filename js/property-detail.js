@@ -84,10 +84,26 @@ function initPropertyDetail() {
     
     // タイトルと価格
     document.getElementById('property-title').textContent = property.title;
-    const priceDisplay = property.type.includes('売') 
-        ? `¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円` 
-        : `¥${property.price.toLocaleString()}/月`;
+
+    const isSold = property.status === 'sold';
+    const statusLabel = property.statusLabel || '売約済み';
+    const priceDisplay = isSold
+        ? statusLabel
+        : property.type.includes('売')
+            ? `¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円`
+            : `¥${property.price.toLocaleString()}/月`;
+
     document.getElementById('property-price').textContent = priceDisplay;
+
+    const statusElement = document.getElementById('property-status');
+    if (statusElement) {
+        if (isSold) {
+            statusElement.textContent = property.soldDate ? `${statusLabel}（${property.soldDate}）` : statusLabel;
+            statusElement.hidden = false;
+        } else {
+            statusElement.hidden = true;
+        }
+    }
     
     // ギャラリー
     const gallery = document.getElementById('property-gallery');
@@ -123,7 +139,7 @@ function initPropertyDetail() {
         <h3 style="color: var(--color-primary); margin-bottom: 1rem;">物件情報</h3>
         <div class="spec-item">
             <span class="spec-label">価格</span>
-            <span class="spec-value">${priceDisplay}</span>
+            <span class="spec-value">${isSold && property.type.includes('売') ? `成約価格（表示価格） ¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円` : priceDisplay}</span>
         </div>
         <div class="spec-item">
             <span class="spec-label">間取り</span>
@@ -161,7 +177,7 @@ function initPropertyDetail() {
         </div>
         <div class="spec-item">
             <span class="spec-label">現況</span>
-            <span class="spec-value">${property.condition}</span>
+            <span class="spec-value">${isSold ? statusLabel : property.condition}</span>
         </div>
         <div class="spec-item">
             <span class="spec-label">引渡</span>
@@ -181,6 +197,21 @@ function initPropertyDetail() {
         </div>
         ` : ''}
     `;
+
+    const cta = document.getElementById('property-cta');
+    const ctaTitle = document.getElementById('property-cta-title');
+    const ctaText = document.getElementById('property-cta-text');
+    const ctaPrimary = document.getElementById('property-cta-primary');
+    const ctaSecondary = document.getElementById('property-cta-secondary');
+
+    if (isSold && cta && ctaTitle && ctaText && ctaPrimary && ctaSecondary) {
+        cta.classList.add('is-sold');
+        ctaTitle.textContent = 'この物件は売約済みです';
+        ctaText.textContent = '同条件・近隣エリアの新着物件をご案内できます。ご希望条件をお聞かせください。';
+        ctaPrimary.textContent = '類似物件を問い合わせる';
+        ctaPrimary.href = 'contact.html?service=property&status=sold';
+        ctaSecondary.textContent = '新着を電話で相談';
+    }
 }
 
 // ギャラリーのメイン画像を変更（グローバル関数）
