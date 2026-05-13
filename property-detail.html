@@ -216,24 +216,38 @@
             color: white;
         }
 
-        .property-hero-status {
-            display: inline-block;
-            margin-bottom: 0.75rem;
-            background: var(--color-sold);
-            color: #fff;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            padding: 0.35rem 0.9rem;
-            border-radius: 4px;
+        .sold-property-notice {
+            background: #fff7ec;
+            border: 1px solid #ead4b0;
+            color: #6d583c;
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
         }
 
-        .property-hero-status[hidden] {
-            display: none;
+        .sold-gallery-main,
+        .sold-thumbnail {
+            position: relative;
+            overflow: hidden;
         }
 
-        .contact-cta.is-sold {
-            border: 1px solid var(--color-sold);
-            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.15);
+        .sold-gallery-main img,
+        .sold-thumbnail {
+            filter: blur(18px) saturate(0.85);
+            transform: scale(1.08);
+        }
+
+        .sold-image-overlay {
+            position: absolute;
+            inset: auto 1rem 1rem 1rem;
+            background: rgba(0, 0, 0, 0.55);
+            color: white;
+            padding: 0.65rem 0.9rem;
+            border-radius: 999px;
+            text-align: center;
+            font-size: 0.85rem;
+            letter-spacing: 0.03em;
         }
         
         @media (max-width: 768px) {
@@ -296,7 +310,6 @@
     <main>
         <section class="property-detail-hero">
             <div class="container">
-                <div class="property-hero-status" id="property-status" hidden>売約済み</div>
                 <h2 class="section-title" id="property-title">松山市 鷹子町 3SLDK</h2>
                 <p style="font-size: 2rem; color: var(--color-primary); font-weight: 500;" id="property-price">¥2,530万円</p>
             </div>
@@ -304,6 +317,8 @@
 
         <section>
             <div class="container">
+                <div id="property-notice"></div>
+
                 <!-- ギャラリー -->
                 <div class="property-gallery" id="property-gallery">
                     <!-- JavaScriptで動的に追加 -->
@@ -331,19 +346,19 @@
                 </div>
 
                 <!-- CTA -->
-                <div class="contact-cta animate-fadeIn" id="property-cta">
-                    <h3 id="property-cta-title">この物件に関するお問い合わせ</h3>
-                    <p id="property-cta-text" style="margin-bottom: 2rem;">詳しい情報や内見のご予約は、お気軽にご連絡ください。</p>
+                <div class="contact-cta animate-fadeIn">
+                    <h3 id="cta-title">この物件に関するお問い合わせ</h3>
+                    <p id="cta-text" style="margin-bottom: 2rem;">詳しい情報や内見のご予約は、お気軽にご連絡ください。</p>
                     <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <a href="contact.html" class="btn btn-primary" id="property-cta-primary">お問い合わせフォーム</a>
-                        <a href="tel:089-900-1382" class="btn btn-secondary" id="property-cta-secondary">電話で問い合わせ</a>
+                        <a id="cta-primary" href="contact.html" class="btn btn-primary">お問い合わせフォーム</a>
+                        <a id="cta-secondary" href="tel:089-900-1382" class="btn btn-secondary">電話で問い合わせ</a>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 物件の位置 -->
-        <section style="background-color: var(--color-gray);">
+        <section id="property-map-section" style="background-color: var(--color-gray);">
             <div class="container">
                 <h2 class="section-title">📍 物件の位置</h2>
                 <div id="property-map" style="width: 100%; height: 400px; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1); background-color: white;"></div>

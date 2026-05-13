@@ -1,13 +1,15 @@
-// 物件データ（At Homeから取得）
+// 物件データ
 const properties = [
     {
         id: 1,
+        status: 'sold',
         type: '売中古一戸建',
         title: '松山市 鷹子町 3SLDK',
+        publicTitle: '松山市内 / 中古一戸建て',
+        publicAreaLabel: '松山市内',
+        publicSummary: 'ファミリー向けの中古一戸建ての成約実績です。売約済みのため、詳細情報は実績紹介向けの粒度に調整しています。',
+        publicFeatures: ['中古一戸建て', 'ファミリー向け', '成約実績'],
         price: 25300000,
-        status: 'sold',
-        statusLabel: '売約済み',
-        soldDate: '2026年3月',
         layout: '3SLDK',
         area: 84.45,
         age: 20,
@@ -35,8 +37,8 @@ const properties = [
         },
         structure: '木造2階建',
         builtDate: '2006年2月',
-        condition: '空家',
-        delivery: '相談',
+        condition: '成約済',
+        delivery: '---',
         transaction: '売主',
         athomeUrl: 'https://www.athome.co.jp/kodate/6989126396/',
         lat: 33.8199,
@@ -63,51 +65,26 @@ const properties = [
     }
 ];
 
-function normalizeProperty(property) {
-    return {
-        ...property,
-        status: property.status || 'available',
-        statusLabel: property.statusLabel || '売約済み'
-    };
-}
+const activeProperties = properties.filter(property => property.status !== 'sold');
+const soldProperties = properties.filter(property => property.status === 'sold');
 
-function isSoldProperty(property) {
-    return property.status === 'sold';
-}
+let currentProperties = [...activeProperties];
 
-function formatPropertyPrice(property) {
-    return property.type.includes('売')
+function createPropertyCard(property) {
+    const priceDisplay = property.type.includes('売')
         ? `¥${(property.price / 10000).toLocaleString(undefined, { maximumFractionDigits: 0 })}万円`
         : `¥${property.price.toLocaleString()}/月`;
-}
-
-const normalizedProperties = properties.map(normalizeProperty);
-
-// 現在の物件リスト（フィルター適用後）
-let currentProperties = [...normalizedProperties];
-
-/**
- * 物件カードを生成
- */
-function createPropertyCard(property) {
-    const isSold = isSoldProperty(property);
-    const statusLabel = property.statusLabel;
-
-    const priceDisplay = formatPropertyPrice(property);
 
     const ageDisplay = property.age === 0 ? '土地' : `築${property.age}年`;
-
     const landInfo = property.landArea ? ` / 土地${property.landArea}㎡` : '';
-    const statusBadge = isSold ? `<span class="property-status-badge">${statusLabel}</span>` : '';
 
     return `
-        <div class="property-card ${isSold ? 'is-sold' : ''}" onclick="location.href='property-detail.html?id=${property.id}'">
+        <div class="property-card" onclick="location.href='property-detail.html?id=${property.id}'">
             <div class="property-image">
-                ${statusBadge}
                 <img src="${property.image}" alt="${property.title}">
             </div>
             <div class="property-info">
-                <div class="property-price ${isSold ? 'is-sold' : ''}">${priceDisplay}</div>
+                <div class="property-price">${priceDisplay}</div>
                 <div class="property-title">${property.title}</div>
                 <div class="property-details">
                     ${property.layout} | 建物${property.area}㎡${landInfo} | ${ageDisplay}<br>
@@ -121,88 +98,138 @@ function createPropertyCard(property) {
     `;
 }
 
-/**
- * 物件一覧を表示
- */
+function createSoldAchievementCard(property) {
+    return `
+        <div class="property-card sold-achievement-card" onclick="location.href='property-detail.html?id=${property.id}'">
+            <div class="property-image sold-achievement-image" style="position: relative; overflow: hidden;">
+                <img src="${property.image}" alt="${property.publicTitle}" style="filter: blur(16px) saturate(0.85); transform: scale(1.08);">
+                <div class="sold-achievement-badge" style="position:absolute; top:12px; left:12px; background:rgba(44,44,44,0.82); color:#fff; padding:0.45rem 0.8rem; border-radius:999px; font-size:0.8rem; letter-spacing:0.04em;">成約実績</div>
+            </div>
+            <div class="property-info">
+                <div class="property-price">SOLD</div>
+                <div class="property-title">${property.publicTitle}</div>
+                <div class="property-details">
+                    ${property.publicSummary}
+                </div>
+                <div class="property-tags">
+                    ${property.publicFeatures.map(f => `<span class="property-tag">${f}</span>`).join('')}
+                </div>
+                <div style="margin-top: 1rem; color: var(--color-primary); font-weight: 500;">実績紹介を見る →</div>
+            </div>
+        </div>
+    `;
+}
+
 function displayProperties(propertiesToShow = currentProperties) {
     const container = document.getElementById('properties-list');
     const countElement = document.getElementById('properties-count');
     const noResults = document.getElementById('no-results');
-    
+    const mapSection = document.getElementById('properties-map-section');
+
     if (!container) return;
-    
+
     if (propertiesToShow.length === 0) {
         container.innerHTML = '';
-        noResults.style.display = 'block';
-        countElement.textContent = '';
+        if (noResults) noResults.style.display = 'block';
+        if (countElement) countElement.textContent = '';
+        if (mapSection) mapSection.style.display = 'none';
     } else {
         container.innerHTML = propertiesToShow.map(p => createPropertyCard(p)).join('');
-        noResults.style.display = 'none';
-        countElement.textContent = `${propertiesToShow.length}件の物件が見つかりました`;
+        if (noResults) noResults.style.display = 'none';
+        if (countElement) countElement.textContent = `${propertiesToShow.length}件の物件が見つかりました`;
+        if (mapSection) mapSection.style.display = '';
     }
 }
 
-/**
- * フィルターを適用
- */
+function displaySoldAchievements() {
+    const container = document.getElementById('sold-achievements-list');
+    if (!container) return;
+
+    if (soldProperties.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#666;">現在ご紹介できる成約実績はありません。</p>';
+        return;
+    }
+
+    container.innerHTML = soldProperties.map(p => createSoldAchievementCard(p)).join('');
+}
+
 function applyFilters() {
     const typeFilter = document.getElementById('filter-type')?.value || '';
     const priceFilter = document.getElementById('filter-price')?.value || '';
     const layoutFilter = document.getElementById('filter-layout')?.value || '';
-    
-    currentProperties = normalizedProperties.filter(property => {
-        // 種別フィルター
-        if (typeFilter && property.type !== typeFilter) {
-            return false;
-        }
-        
-        // 価格帯フィルター
+
+    currentProperties = activeProperties.filter(property => {
+        if (typeFilter && property.type !== typeFilter) return false;
+
         if (priceFilter) {
             const [min, max] = priceFilter.split('-').map(v => parseInt(v) || Infinity);
-            if (property.price < min || property.price > max) {
-                return false;
-            }
+            if (property.price < min || property.price > max) return false;
         }
-        
-        // 間取りフィルター
-        if (layoutFilter && property.layout !== layoutFilter) {
-            return false;
-        }
-        
+
+        if (layoutFilter && property.layout !== layoutFilter) return false;
+
         return true;
     });
-    
+
     displayProperties(currentProperties);
 }
 
-/**
- * URLパラメータから物件タイプを取得
- */
 function getPropertyTypeFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('type');
 }
 
-// ページ読み込み時に実行
+function renderHomeProperties(containerId = 'recommended-properties') {
+    const container = document.getElementById(containerId);
+    const sectionTitle = document.getElementById('home-property-section-title');
+    const sectionCopy = document.getElementById('home-property-section-copy');
+    if (!container) return;
+
+    if (activeProperties.length > 0) {
+        const recommendedProperties = activeProperties.slice(0, Math.min(activeProperties.length, 3));
+        const isSingle = recommendedProperties.length === 1;
+        const wrapperClass = isSingle ? '' : 'properties-grid';
+
+        if (sectionTitle) sectionTitle.textContent = '公開中物件';
+        if (sectionCopy) sectionCopy.textContent = '現在公開中の物件情報をご案内します。';
+
+        container.innerHTML = `
+            <div class="${wrapperClass}">
+                ${recommendedProperties.map(property => createPropertyCard(property)).join('')}
+            </div>
+        `;
+        return;
+    }
+
+    if (soldProperties.length > 0) {
+        if (sectionTitle) sectionTitle.textContent = '成約実績';
+        if (sectionCopy) sectionCopy.textContent = '現在公開中の物件はありません。成約実績の一例をご紹介します。';
+        container.innerHTML = `
+            <div style="max-width: 520px; margin: 0 auto;">
+                ${createSoldAchievementCard(soldProperties[0])}
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = '<p style="text-align: center; color: #666;">現在、掲載可能な物件はありません。</p>';
+}
+
 window.addEventListener('load', () => {
-    // URLパラメータから物件タイプを取得して自動フィルター
     const typeFromURL = getPropertyTypeFromURL();
     if (typeFromURL) {
         const filterType = document.getElementById('filter-type');
         if (filterType) {
-            if (typeFromURL === 'rent') {
-                // 賃貸物件を表示（実装は後で調整）
-            } else if (typeFromURL === 'sale') {
+            if (typeFromURL === 'sale') {
                 // 売買物件を表示
             }
         }
     }
-    
-    // 物件一覧を表示
+
     displayProperties();
+    displaySoldAchievements();
 });
 
-// フィルター変更時にリアルタイム適用（オプション）
 document.addEventListener('DOMContentLoaded', () => {
     const filters = ['filter-type', 'filter-price', 'filter-layout'];
     filters.forEach(filterId => {
@@ -213,44 +240,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-/**
- * 物件マップを初期化
- */
 function initPropertiesMap() {
     const mapElement = document.getElementById('properties-map');
-    if (!mapElement || typeof google === 'undefined') return;
-    
-    // 松山市を中心に
+    if (!mapElement || typeof google === 'undefined' || activeProperties.length === 0) return;
+
     const center = { lat: 33.84, lng: 132.79 };
     const map = new google.maps.Map(mapElement, {
         zoom: 12,
-        center: center,
+        center,
         mapTypeId: 'roadmap'
     });
-    
-    // 各物件にマーカーを配置
-    normalizedProperties.forEach(property => {
+
+    activeProperties.forEach(property => {
         if (property.lat && property.lng) {
             const marker = new google.maps.Marker({
                 position: { lat: property.lat, lng: property.lng },
-                map: map,
+                map,
                 title: property.title
             });
-            
-            // クリック時に情報ウィンドウを表示
+
             const infoWindow = new google.maps.InfoWindow({
                 content: `
                     <div style="padding: 10px; min-width: 200px;">
                         <h4 style="margin: 0 0 5px 0; font-size: 16px;">${property.title}</h4>
                         <p style="margin: 5px 0; font-size: 18px; font-weight: bold; color: #C9A87C;">
-                            ${formatPropertyPrice(property)}
+                            ${property.type.includes('売') ? '¥' + (property.price / 10000).toLocaleString() + '万円' : '¥' + property.price.toLocaleString() + '/月'}
                         </p>
-                        <p style="margin: 5px 0; color: #666; font-size: 14px;">${property.layout} | ${property.area}㎡${isSoldProperty(property) ? ' | 売約済み' : ''}</p>
+                        <p style="margin: 5px 0; color: #666; font-size: 14px;">${property.layout} | ${property.area}㎡</p>
                         <a href="property-detail.html?id=${property.id}" style="color: #C9A87C; text-decoration: none; font-weight: bold;">詳細を見る →</a>
                     </div>
                 `
             });
-            
+
             marker.addListener('click', () => {
                 infoWindow.open(map, marker);
             });
@@ -258,7 +279,6 @@ function initPropertiesMap() {
     });
 }
 
-// 物件一覧ページでのみ地図を初期化
 if (document.getElementById('properties-map')) {
     window.addEventListener('load', initPropertiesMap);
 }

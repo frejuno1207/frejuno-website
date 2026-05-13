@@ -142,36 +142,14 @@
         </div>
     </section>
 
-    <!-- おすすめ物件 -->
+    <!-- 公開中物件 / 成約実績 -->
     <section class="recommended-properties">
         <div class="container">
-            <h2 class="section-title">おすすめ物件</h2>
-            <div style="max-width: 600px; margin: 0 auto;">
-                <div class="property-card">
-                    <div class="property-image" style="width: 100%; height: 250px; background-image: url('images/property-takako-exterior-1.jpg'); background-size: cover; background-position: center;"></div>
-                    <div class="property-info">
-                        <div class="property-price">¥2,530万円</div>
-                        <div class="property-title">松山市 鷹子町 3SLDK</div>
-                        <div class="property-details">
-                            3SLDK | 建物84.45㎡ / 土地105.22㎡ | 築20年<br>
-                            鷹ノ子駅 徒歩13分
-                        </div>
-                        <div class="property-tags">
-                            <span class="property-tag">駐車場２台分</span>
-                            <span class="property-tag">オール電化</span>
-                            <span class="property-tag">全室2面採光</span>
-                            <span class="property-tag">閑静な住宅街</span>
-                            <span class="property-tag">カウンターキッチン</span>
-                        </div>
-                        <a href="property-detail.html?id=1" class="property-card-cta">
-                            詳細を見る
-                            <span class="arrow">→</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <h2 class="section-title" id="home-property-section-title">公開中物件</h2>
+            <p id="home-property-section-copy" style="text-align:center; color:#666; margin-bottom:2rem;">現在公開中の物件情報をご案内します。</p>
+            <div id="recommended-properties"></div>
             <div class="text-center" style="margin-top: 3rem;">
-                <a href="properties.html" class="btn btn-primary">すべての物件を見る</a>
+                <a href="properties.html" class="btn btn-primary">物件一覧・成約実績を見る</a>
             </div>
         </div>
     </section>
@@ -211,65 +189,8 @@
     <!-- JavaScript -->
     <script src="js/properties.js"></script>
     <script>
-        // トップページのおすすめ物件表示
         window.addEventListener('load', () => {
-            console.log('Loading recommended properties...');
-            const container = document.getElementById('recommended-properties');
-            
-            if (!container) {
-                console.error('Container not found');
-                return;
-            }
-            
-            if (typeof properties === 'undefined') {
-                console.error('Properties undefined');
-                container.innerHTML = '<p style="text-align: center; color: #666;">物件データを読み込み中...</p>';
-                return;
-            }
-            
-            console.log('Properties found:', properties.length);
-            
-            // 最新物件を表示（現在1件の場合は1件のみ、将来複数あれば最大3件）
-            const recommendedProperties = properties.slice(0, Math.min(properties.length, 3));
-            
-            if (recommendedProperties.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666;">現在、掲載可能な物件はありません。</p>';
-                return;
-            }
-            
-            // 1件の場合は中央寄せの大きめカード、複数の場合はグリッド
-            const isSingle = recommendedProperties.length === 1;
-            const wrapperClass = isSingle ? '' : 'properties-grid';
-            
-            container.innerHTML = `
-                <div class="${wrapperClass}">
-                    ${recommendedProperties.map(property => {
-                const priceDisplay = property.type.includes('売') 
-                    ? `¥${(property.price / 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}万円` 
-                    : `¥${property.price.toLocaleString()}/月`;
-                
-                const ageDisplay = property.age === 0 ? '土地' : `築${property.age}年`;
-                const landInfo = property.landArea ? ` / 土地${property.landArea}㎡` : '';
-                
-                return `
-                    <div class="property-card" style="max-width: 400px; cursor: pointer;" onclick="location.href='property-detail.html?id=${property.id}'">
-                        <div class="property-image" style="background-image: url('${property.image}'); background-size: cover; background-position: center; height: 250px;">
-                        </div>
-                        <div class="property-info">
-                            <div class="property-price">${priceDisplay}</div>
-                            <div class="property-title">${property.title}</div>
-                            <div class="property-details">
-                                ${property.layout} | 建物${property.area}㎡${landInfo} | ${ageDisplay}<br>
-                                ${property.station} 徒歩${property.walk}分
-                            </div>
-                            <div class="property-tags">
-                                ${property.features.slice(0, 5).map(f => `<span class="property-tag">${f}</span>`).join('')}
-                            </div>
-                        </div>
-                    </div>
-                    `).join('')}
-                </div>
-            `;
+            renderHomeProperties('recommended-properties');
         });
     </script>
     
