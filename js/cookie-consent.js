@@ -127,7 +127,7 @@
         banner.innerHTML = [
             '<div class="cookie-consent-text">',
             '<strong>Cookie・外部サービスの利用について</strong>',
-            '<p>フレジュノ（Frejuno）サイトでは、地図表示など一部機能でGoogle Maps等の外部サービスを利用します。同意するまで地図は読み込みません。</p>',
+            '<p>Frejunoサイトでは、地図表示など一部機能でGoogle Maps等の外部サービスを利用します。同意するまで地図は読み込みません。</p>',
             '</div>',
             '<div class="cookie-consent-actions">',
             '<button type="button" class="btn btn-primary" data-cookie-accept>同意する</button>',
