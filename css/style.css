@@ -283,6 +283,98 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--color-secondary);
 }
 
+.guide-hero {
+    background: var(--color-gray);
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.guide-lead {
+    max-width: 780px;
+    margin: 0 auto 2rem;
+    color: #555;
+    font-size: 1.05rem;
+}
+
+.guide-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 0.8fr);
+    gap: 2rem;
+    align-items: start;
+}
+
+.guide-content h2 {
+    color: var(--color-primary);
+    margin: 2rem 0 1rem;
+    font-size: 1.45rem;
+}
+
+.guide-content h2:first-child {
+    margin-top: 0;
+}
+
+.guide-content p,
+.guide-content li {
+    color: #555;
+}
+
+.guide-content ul,
+.guide-content ol {
+    margin-left: 1.3rem;
+}
+
+.guide-sidebox {
+    background: #fff;
+    border: 1px solid rgba(201, 168, 124, 0.25);
+    border-radius: 8px;
+    padding: 1.25rem;
+    position: sticky;
+    top: 100px;
+}
+
+.guide-sidebox h3 {
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.guide-sidebox ul {
+    list-style: none;
+}
+
+.guide-sidebox li + li {
+    margin-top: 0.5rem;
+}
+
+.guide-sidebox a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.guide-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.guide-card {
+    background: #fff;
+    border: 1px solid rgba(201, 168, 124, 0.22);
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.guide-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.related-guides {
+    background: var(--color-gray);
+}
+
 /* ヒーローセクション */
 .hero-section {
     position: relative;
@@ -423,6 +515,14 @@ h1, h2, h3, h4, h5, h6 {
 
     .area-lead {
         font-size: 1rem;
+    }
+
+    .guide-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .guide-sidebox {
+        position: static;
     }
 
     .hero-section {
