@@ -173,6 +173,116 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
+.eyebrow {
+    color: var(--color-secondary);
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.area-hero {
+    background: var(--color-gray);
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.area-lead {
+    max-width: 760px;
+    margin: 0 auto 2rem;
+    color: #555;
+    font-size: 1.05rem;
+}
+
+.area-hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.area-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.area-card {
+    background: #fff;
+    border: 1px solid rgba(201, 168, 124, 0.22);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.area-card h3,
+.intent-list h3 {
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.area-keywords {
+    margin-top: 1rem;
+    color: var(--color-secondary);
+    font-size: 0.9rem;
+}
+
+.service-intent-section {
+    background: var(--color-gray);
+}
+
+.intent-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.intent-list > div {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.faq-section {
+    max-width: 900px;
+}
+
+.faq-section details {
+    border-bottom: 1px solid #e6dfd6;
+    padding: 1rem 0;
+}
+
+.faq-section summary {
+    cursor: pointer;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.faq-section details p {
+    margin-top: 0.75rem;
+    color: #555;
+}
+
+.area-cta {
+    background: var(--color-primary);
+    color: #fff;
+    text-align: center;
+}
+
+.area-cta h2 {
+    margin-bottom: 1rem;
+}
+
+.area-cta p {
+    margin-bottom: 1.5rem;
+}
+
+.area-cta .btn-primary {
+    background: #fff;
+    color: var(--color-secondary);
+}
+
 /* ヒーローセクション */
 .hero-section {
     position: relative;
@@ -305,6 +415,14 @@ h1, h2, h3, h4, h5, h6 {
     .cookie-consent-actions {
         justify-content: flex-start;
         flex-wrap: wrap;
+    }
+
+    .area-hero {
+        padding: 3rem 0;
+    }
+
+    .area-lead {
+        font-size: 1rem;
     }
 
     .hero-section {
