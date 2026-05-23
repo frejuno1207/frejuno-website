@@ -281,4 +281,5 @@ function initPropertiesMap() {
 
 if (document.getElementById('properties-map')) {
     window.addEventListener('load', initPropertiesMap);
+    window.addEventListener('frejuno:maps-ready', initPropertiesMap);
 }

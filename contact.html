@@ -3,8 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お問い合わせ - 株式会社Frejuno</title>
-    <meta name="description" content="株式会社Frejunoへのお問い合わせフォーム。物件のご相談、査定依頼など、お気軽にご連絡ください。">
+    <title>お問い合わせ - 株式会社Frejuno（フレジュノ）</title>
+    <meta name="description" content="株式会社Frejuno（フレジュノ）へのお問い合わせ。松山市の不動産売買、賃貸、買取査定、リフォーム相談、住み替え相談はこちら。">
+    <link rel="canonical" href="https://frejuno.com/contact.html">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="Frejuno, フレジュノ, 株式会社Frejuno, 松山市 不動産, 愛媛県 不動産, 松山 賃貸, 松山 売買, 松山 買取査定, 松山 リフォーム相談">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="お問い合わせ - 株式会社Frejuno（フレジュノ）">
+    <meta property="og:description" content="株式会社Frejuno（フレジュノ）へのお問い合わせ。松山市の不動産売買、賃貸、買取査定、リフォーム相談、住み替え相談はこちら。">
+    <meta property="og:url" content="https://frejuno.com/contact.html">
+    <meta property="og:site_name" content="株式会社Frejuno（フレジュノ）">
+    <meta property="og:image" content="https://frejuno.com/images/logo-full.png">
+    <meta property="og:locale" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="お問い合わせ - 株式会社Frejuno（フレジュノ）">
+    <meta name="twitter:description" content="株式会社Frejuno（フレジュノ）へのお問い合わせ。松山市の不動産売買、賃貸、買取査定、リフォーム相談、住み替え相談はこちら。">
+    <meta name="twitter:image" content="https://frejuno.com/images/logo-full.png">
+    <link rel="icon" href="/images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="manifest" href="/site.webmanifest">
+
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations.css">
@@ -14,7 +32,7 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="Frejuno"></a></h1>
+                <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="Frejuno（フレジュノ）"></a></h1>
                 
                 <nav class="nav">
                     <!-- モバイル用検索トグルボタン -->
@@ -132,7 +150,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>株式会社Frejuno</h4>
+                    <h4>株式会社Frejuno（フレジュノ）</h4>
                     <p>〒791-1114<br>愛媛県松山市井門町551-5</p>
                     <p>TEL: 089-900-1382</p>
                     <p>定休日：水曜日、年末年始、夏季休暇</p>
@@ -159,6 +177,8 @@
         </div>
     </footer>
 
+    <script src="js/cookie-consent.js"></script>
+
     <script src="js/main.js"></script>
     <script>
         // URLパラメータから問い合わせ内容をプリセット
@@ -175,14 +195,20 @@
             if (service === 'assessment') {
                 subject.value = '査定依頼';
                 if (!message.value) {
-                    message.value = '無料査定を希望します。\n物件情報：\n希望連絡方法：';
+                    message.value = '無料査定を希望します。
+物件情報：
+希望連絡方法：';
                 }
             }
 
             if (service === 'property' && status === 'sold') {
                 subject.value = '購入相談';
                 if (!message.value) {
-                    message.value = '売約済み物件を見てご連絡しました。\n同条件・近隣エリアの類似物件を紹介してください。\n希望条件：\nご予算：\n希望時期：';
+                    message.value = '売約済み物件を見てご連絡しました。
+同条件・近隣エリアの類似物件を紹介してください。
+希望条件：
+ご予算：
+希望時期：';
                 }
             }
         })();
@@ -198,7 +224,20 @@
             const message = document.getElementById('message').value;
             
             // メール本文を作成
-            const body = `【お名前】\n${name}\n\n【メールアドレス】\n${email}\n\n【電話番号】\n${phone || '未入力'}\n\n【お問い合わせ件名】\n${subject}\n\n【お問い合わせ内容】\n${message}`;
+            const body = `【お名前】
+${name}
+
+【メールアドレス】
+${email}
+
+【電話番号】
+${phone || '未入力'}
+
+【お問い合わせ件名】
+${subject}
+
+【お問い合わせ内容】
+${message}`;
             
             // mailtoリンクを作成
             const mailtoLink = `mailto:office@frejuno.com?subject=${encodeURIComponent('【ウェブサイトより】' + subject)}&body=${encodeURIComponent(body)}`;
@@ -208,7 +247,11 @@
             
             // 確認メッセージ
             setTimeout(() => {
-                alert('メールソフトが起動します。\n\n送信ボタンを押してお問い合わせを完了してください。\n\nメールソフトが起動しない場合は、直接 office@frejuno.com までご連絡ください。');
+                alert('メールソフトが起動します。
+
+送信ボタンを押してお問い合わせを完了してください。
+
+メールソフトが起動しない場合は、直接 office@frejuno.com までご連絡ください。');
             }, 500);
         });
     </script>

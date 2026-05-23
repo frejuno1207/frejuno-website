@@ -13,6 +13,10 @@ function initMap(elementId, lat, lng, zoom = 15) {
         console.error('Map element not found:', elementId);
         return null;
     }
+
+    if (!window.google || !window.google.maps) {
+        return null;
+    }
     
     const mapOptions = {
         center: { lat: lat, lng: lng },
@@ -44,11 +48,15 @@ function initCompanyMap() {
         return;
     }
     
-    const { map, marker } = initMap('company-map', lat, lng, 16);
+    const mapData = initMap('company-map', lat, lng, 16);
+    if (!mapData) return;
+
+    const { map, marker } = mapData;
+    let infoWindow = null;
     
     if (marker) {
         // 情報ウィンドウを追加
-        const infoWindow = new google.maps.InfoWindow({
+        infoWindow = new google.maps.InfoWindow({
             content: `
                 <div style="padding: 10px;">
                     <h3>${CONFIG.COMPANY.name}</h3>
@@ -80,7 +88,7 @@ function initCompanyMap() {
     
     // マーカーのクリックでもGoogleマップを開く（情報ウィンドウも表示）
     marker.addListener('click', () => {
-        infoWindow.open(map, marker);
+        if (infoWindow) infoWindow.open(map, marker);
         // 少し遅延させてGoogleマップを開く（情報ウィンドウを見せる時間を作る）
         setTimeout(() => {
             window.open(googleMapsUrl, '_blank');
@@ -96,7 +104,10 @@ function initCompanyMap() {
  * @param {string} address - 住所
  */
 function initPropertyMap(lat, lng, title, address) {
-    const { map, marker } = initMap('property-map', lat, lng, 16);
+    const mapData = initMap('property-map', lat, lng, 16);
+    if (!mapData) return;
+
+    const { map, marker } = mapData;
     
     if (marker) {
         marker.setTitle(title);
@@ -191,5 +202,11 @@ window.addEventListener('load', () => {
     if (document.getElementById('property-map')) {
         // 物件データを取得して地図初期化
         // 実装は物件詳細ページ作成時に追加
+    }
+});
+
+window.addEventListener('frejuno:maps-ready', () => {
+    if (document.getElementById('company-map')) {
+        initCompanyMap();
     }
 });

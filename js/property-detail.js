@@ -77,6 +77,10 @@ function renderActiveProperty(property) {
         <div class="spec-item"><span class="spec-label">引渡</span><span class="spec-value">${property.delivery}</span></div>
         <div class="spec-item"><span class="spec-label">取引態様</span><span class="spec-value">${property.transaction}</span></div>
     `;
+
+    if (property.lat && property.lng && typeof initPropertyMap === 'function') {
+        initPropertyMap(property.lat, property.lng, property.title, property.address);
+    }
 }
 
 function renderSoldAchievement(property) {
@@ -166,4 +170,11 @@ window.changeMainImage = function(imageSrc, index) {
 
 document.addEventListener('DOMContentLoaded', () => {
     initPropertyDetail();
+});
+
+window.addEventListener('frejuno:maps-ready', () => {
+    const property = getPropertyData(getPropertyIdFromURL());
+    if (property && !isSoldProperty(property) && property.lat && property.lng && typeof initPropertyMap === 'function') {
+        initPropertyMap(property.lat, property.lng, property.title, property.address);
+    }
 });
