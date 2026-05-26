@@ -5,16 +5,16 @@
   "lang": "ja",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#FFFAF4",
   "theme_color": "#C9A87C",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/icon-192.png?v=20260526-brand-1",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/icon-512.png?v=20260526-brand-1",
       "sizes": "512x512",
       "type": "image/png"
     }
