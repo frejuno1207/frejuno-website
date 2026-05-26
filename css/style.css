@@ -72,7 +72,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .logo img {
-    height: 50px;
+    display: block;
+    width: auto;
+    height: 68px;
 }
 
 .nav ul {
@@ -1389,7 +1391,7 @@ section {
     }
 
     .logo img {
-        height: 40px;
+        height: 54px;
     }
 
     .nav {
