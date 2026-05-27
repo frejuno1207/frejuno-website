@@ -37,8 +37,7 @@
             <div class="header-content">
                 <h1 class="logo"><a href="index.html"><img src="images/logo.png?v=20260526-logo-3" alt="Frejuno"></a></h1>
                 
-                <nav class="nav">
-                    <!-- モバイル用検索トグルボタン -->
+                <nav class="nav" aria-label="メインメニュー">
                     <ul>
                         <li><a href="index.html">トップ</a></li>
                         <li><a href="properties.html">物件一覧</a></li>
@@ -57,11 +56,10 @@
             </div>
         </div>
         
-        </div>
     </header>
 
     <!-- モバイル用ナビゲーション -->
-    <nav class="nav-mobile" role="navigation" aria-label="モバイルメニュー">
+    <nav class="nav-mobile" aria-label="モバイルメニュー">
         <ul class="nav-mobile-menu" id="nav-mobile-menu">
             <li><a href="index.html">トップ</a></li>
             <li><a href="properties.html">物件一覧</a></li>
@@ -92,9 +90,24 @@
 
         <section>
             <div class="container" style="max-width: 800px;">
+                <div class="contact-choice-grid">
+                    <a href="contact.html?service=assessment" class="contact-choice-card">
+                        <span>売却・査定</span>
+                        <strong>価格や売り方を相談</strong>
+                    </a>
+                    <a href="contact.html?service=inherited" class="contact-choice-card">
+                        <span>空き家・相続</span>
+                        <strong>売る・貸す・残すを整理</strong>
+                    </a>
+                    <a href="contact.html?service=buy" class="contact-choice-card">
+                        <span>購入・賃貸</span>
+                        <strong>物件探しの条件整理</strong>
+                    </a>
+                </div>
+
                 <div style="background-color: var(--color-gray); padding: 2rem; border-radius: 10px; margin-bottom: 3rem;">
                     <h3 style="color: var(--color-primary); margin-bottom: 1rem;">お電話でのお問い合わせ</h3>
-                    <p style="font-size: 1.5rem; font-weight: bold; color: var(--color-primary);">089-900-1382</p>
+                    <p style="font-size: 1.5rem; font-weight: bold; color: var(--color-primary);"><a href="tel:089-900-1382" style="color: inherit; text-decoration: none;">089&#8209;900&#8209;1382</a></p>
                     <p style="margin-top: 0.5rem; color: #666;">受付時間：10:00〜18:00（水曜定休）</p>
                 </div>
 
@@ -121,10 +134,25 @@
                             <option value="物件について">物件について</option>
                             <option value="査定依頼">査定依頼</option>
                             <option value="売却相談">売却相談</option>
+                            <option value="空き家・相続相談">空き家・相続相談</option>
                             <option value="購入相談">購入相談</option>
                             <option value="賃貸相談">賃貸相談</option>
                             <option value="リフォーム相談">リフォーム相談</option>
                             <option value="その他">その他</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="area" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">相談エリア</label>
+                        <input type="text" id="area" name="area" placeholder="例：松山市、伊予市、東温市など" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="contact-method" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">希望連絡方法</label>
+                        <select id="contact-method" name="contact-method" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
+                            <option value="どちらでも可">どちらでも可</option>
+                            <option value="電話希望">電話希望</option>
+                            <option value="メール希望">メール希望</option>
                         </select>
                     </div>
 
@@ -145,7 +173,8 @@
                     <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
                         ※お問い合わせ内容によっては、お時間をいただく場合がございます。<br>
                         ※土日祝日、定休日（水曜日）にいただいたお問い合わせは、翌営業日以降の対応となります。
-                </div>
+                    </p>
+                </form>
             </div>
         </section>
     </main>
@@ -194,28 +223,65 @@
             const status = params.get('status');
 
             const subject = document.getElementById('subject');
+            const area = document.getElementById('area');
+            const contactMethod = document.getElementById('contact-method');
             const message = document.getElementById('message');
 
             if (!subject || !message) return;
 
-            if (service === 'assessment') {
-                subject.value = '査定依頼';
-                if (!message.value) {
-                    message.value = '無料査定を希望します。
-物件情報：
-希望連絡方法：';
+            const presets = {
+                assessment: {
+                    subject: '査定依頼',
+                    message: '無料査定を希望します。\n物件所在地：\n物件種別：\n売却希望時期：'
+                },
+                sell: {
+                    subject: '売却相談',
+                    message: '売却について相談したいです。\n物件所在地：\n売却を考えている理由：\n希望時期：'
+                },
+                inherited: {
+                    subject: '空き家・相続相談',
+                    message: '空き家・相続不動産について相談したいです。\n物件所在地：\n現在の状況：\n相談したいこと：'
+                },
+                vacant: {
+                    subject: '空き家・相続相談',
+                    message: '空き家について相談したいです。\n物件所在地：\n建物の状態：\n売却・賃貸・管理など希望：'
+                },
+                buy: {
+                    subject: '購入相談',
+                    message: '購入物件について相談したいです。\n希望エリア：\n希望条件：\nご予算：\n希望時期：'
+                },
+                rent: {
+                    subject: '賃貸相談',
+                    message: '賃貸物件について相談したいです。\n希望エリア：\n間取り・家賃：\n入居希望時期：'
+                },
+                reform: {
+                    subject: 'リフォーム相談',
+                    message: 'リフォームについて相談したいです。\n物件所在地：\n相談内容：\n希望時期：'
                 }
+            };
+
+            if (presets[service]) {
+                subject.value = presets[service].subject;
+                if (!message.value) message.value = presets[service].message;
             }
 
             if (service === 'property' && status === 'sold') {
                 subject.value = '購入相談';
                 if (!message.value) {
-                    message.value = '売約済み物件を見てご連絡しました。
-同条件・近隣エリアの類似物件を紹介してください。
-希望条件：
-ご予算：
-希望時期：';
+                    message.value = '売約済み物件を見てご連絡しました。\n同条件・近隣エリアの類似物件を紹介してください。\n希望条件：\nご予算：\n希望時期：';
                 }
+            }
+
+            const areaParam = params.get('area');
+            const contactMethodParam = params.get('contactMethod') || params.get('method');
+
+            if (area && areaParam && !area.value) {
+                area.value = areaParam;
+            }
+
+            if (contactMethod && contactMethodParam) {
+                const hasOption = Array.from(contactMethod.options).some((option) => option.value === contactMethodParam);
+                if (hasOption) contactMethod.value = contactMethodParam;
             }
         })();
 
@@ -227,6 +293,8 @@
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const subject = document.getElementById('subject').value;
+            const area = document.getElementById('area').value;
+            const contactMethod = document.getElementById('contact-method').value;
             const message = document.getElementById('message').value;
             
             // メール本文を作成
@@ -238,6 +306,12 @@ ${email}
 
 【電話番号】
 ${phone || '未入力'}
+
+【相談エリア】
+${area || '未入力'}
+
+【希望連絡方法】
+${contactMethod || '未入力'}
 
 【お問い合わせ件名】
 ${subject}
@@ -253,11 +327,7 @@ ${message}`;
             
             // 確認メッセージ
             setTimeout(() => {
-                alert('メールソフトが起動します。
-
-送信ボタンを押してお問い合わせを完了してください。
-
-メールソフトが起動しない場合は、直接 office@frejuno.com までご連絡ください。');
+                alert('メールソフトが起動します。\n\n送信ボタンを押してお問い合わせを完了してください。\n\nメールソフトが起動しない場合は、直接 office@frejuno.com までご連絡ください。');
             }, 500);
         });
     </script>

@@ -174,6 +174,10 @@ document.querySelectorAll('.property-card, .feature-card').forEach(card => {
 
 // Swiperヒーロースライダー
 document.addEventListener('DOMContentLoaded', () => {
+    if (typeof Swiper === 'undefined' || !document.querySelector('.hero-swiper')) {
+        return;
+    }
+
     const heroSwiper = new Swiper('.hero-swiper', {
         // 基本設定
         loop: true,
