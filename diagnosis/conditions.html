@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FREJUNO 希望条件入力</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+    background: #f4f6f9; color: #2c3e50; line-height: 1.6; min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  #app { max-width: 560px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; background: #fff; box-shadow: 0 0 30px rgba(0,0,0,0.04); }
+  header { padding: 18px 20px 14px; border-bottom: 1px solid #eef1f4; position: sticky; top: 0; background: #fff; z-index: 10; }
+  .brand { font-size: 14px; font-weight: 700; color: #2c5f7e; letter-spacing: 0.04em; }
+  .brand .accent { color: #d97744; }
+  .progress-wrap { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
+  .progress-track { flex: 1; height: 4px; background: #eef1f4; border-radius: 2px; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, #2c5f7e, #4a9b8e); width: 0%; transition: width 0.25s ease; }
+  .progress-text { font-size: 12px; color: #7f8c9b; min-width: 62px; text-align: right; }
+  main { flex: 1; padding: 28px 22px 100px; }
+  .intro h1 { font-size: 24px; line-height: 1.4; margin-bottom: 12px; }
+  .intro h1 .accent { color: #d97744; }
+  .lead { color: #5b6b7c; font-size: 14px; margin-bottom: 14px; }
+  .badge { display: inline-block; background: #e6f0f5; color: #2c5f7e; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-bottom: 18px; }
+  .notice { font-size: 12px; color: #7f8c9b; background: #f4f7fa; padding: 12px 14px; border-radius: 8px; margin-top: 18px; line-height: 1.7; }
+  .question { animation: fadein 0.22s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .q-label { font-size: 12px; color: #7f8c9b; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .q-text { font-size: 19px; font-weight: 700; line-height: 1.5; margin-bottom: 8px; }
+  .q-help { font-size: 13px; color: #7f8c9b; margin-bottom: 16px; }
+  .opt { display: block; width: 100%; padding: 14px 16px; margin-bottom: 8px; border: 1.5px solid #e4e9ee; border-radius: 10px; background: #fff; text-align: left; font-size: 15px; color: #2c3e50; cursor: pointer; transition: all 0.15s; font-family: inherit; line-height: 1.5; }
+  .opt:hover { border-color: #4a9b8e; background: #f5fafa; }
+  .opt.selected { border-color: #2c5f7e; background: #eef5f9; font-weight: 600; }
+  .opt.disabled { opacity: 0.4; pointer-events: none; }
+  .opt-multi-hint { font-size: 12px; color: #95a4b3; margin-bottom: 10px; }
+  .text-input, .select-input, textarea { width: 100%; padding: 13px 14px; font-size: 15px; font-family: inherit; border: 1.5px solid #e4e9ee; border-radius: 10px; background: #fff; color: #2c3e50; margin-bottom: 10px; }
+  textarea { min-height: 110px; resize: vertical; line-height: 1.7; }
+  .text-input:focus, .select-input:focus, textarea:focus { outline: none; border-color: #2c5f7e; }
+  .nav { position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(255,255,255,0), #fff 30%); padding: 20px 22px; display: flex; gap: 10px; justify-content: space-between; max-width: 560px; margin: 0 auto; }
+  .btn { padding: 13px 22px; font-size: 15px; font-weight: 700; border-radius: 10px; border: none; cursor: pointer; font-family: inherit; transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+  .btn-primary { background: #2c5f7e; color: #fff; flex: 1; }
+  .btn-primary:disabled { background: #c5cdd5; cursor: not-allowed; }
+  .btn-secondary { background: #f4f7fa; color: #5b6b7c; padding: 13px 18px; }
+  .btn-line { background: #06c755; color: #fff; width: 100%; padding: 16px; font-size: 16px; }
+  .btn-outline { background: transparent; color: #2c5f7e; width: 100%; padding: 14px; font-size: 15px; border: 1.5px solid #2c5f7e; margin-top: 10px; }
+  .result-hero { text-align: center; padding: 20px 0 14px; }
+  .result-hero h2 { font-size: 20px; color: #2c5f7e; margin-bottom: 6px; }
+  .result-section { margin-bottom: 22px; }
+  .result-label { font-size: 11px; color: #7f8c9b; letter-spacing: 0.1em; margin-bottom: 8px; font-weight: 700; }
+  .result-card { background: #f7f9fb; padding: 16px 18px; border-radius: 10px; border-left: 3px solid #4a9b8e; }
+  .summary-row { display: flex; padding: 8px 0; border-bottom: 1px solid #e4e9ee; font-size: 14px; gap: 12px; }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-key { color: #7f8c9b; width: 110px; flex-shrink: 0; }
+  .summary-val { color: #2c3e50; flex: 1; }
+  .suggestion-item { padding: 8px 0; font-size: 14px; color: #3c4858; }
+  .suggestion-item::before { content: "→ "; color: #4a9b8e; font-weight: bold; }
+  .type-strip { display: none; align-items: center; gap: 12px; background: #fff8ef; border: 1px solid #f3dfca; border-radius: 12px; padding: 10px; margin: 0 0 18px; }
+  .type-strip img { width: 68px; height: 68px; border-radius: 10px; object-fit: cover; background: #f1e6d7; }
+  .type-strip b { display: block; font-size: 13px; color: #c66135; letter-spacing: 0.08em; }
+  .type-strip span { display: block; font-size: 13px; color: #5b6b7c; }
+  .legal-footer { font-size: 11px; color: #95a4b3; padding: 20px 0 30px; text-align: center; line-height: 1.7; border-top: 1px solid #eef1f4; margin-top: 20px; }
+  @media (max-width: 380px) {
+    main { padding: 24px 18px 100px; }
+    .q-text { font-size: 17px; }
+    .opt { font-size: 14px; padding: 13px 14px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">FREJUNO｜松山住まい診断 <span class="accent">希望条件</span></div>
+    <div class="progress-wrap" id="progressWrap" style="display:none;">
+      <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="progress-text" id="progressText">0 / 0</div>
+    </div>
+  </header>
+  <main id="main"></main>
+  <div class="nav" id="nav" style="display:none;">
+    <button class="btn btn-secondary" id="backBtn">戻る</button>
+    <button class="btn btn-primary" id="nextBtn" disabled>次へ</button>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const TYPE_NAMES = {
+  UMIS: 'まちなかスマート船長', UMIV: '中心部ミニマム探検家', UMFS: '駅近ケアナビゲーター', UMFV: 'まちなか実利プランナー',
+  UWIS: '都心アトリエ店主', UWIV: '都心リノベ開拓者', UWFS: 'まちなか余白キーパー', UWFV: '都市型のびしろプロデューサー',
+  RMIS: '静けさスマート定住者', RMIV: '郊外コンパクト目利き', RMFS: '落ち着きケアガーディアン', RMFV: '郊外バランス設計者',
+  RWIS: '余白アトリエ職人', RWIV: '庭付き開拓クラフター', RWFS: '安心ホームベース守り人', RWFV: '余白を育てるホームメイカー'
+};
+
+const MATSUYAMA_TOWNS = ['市坪北','市坪南','余戸','土居田','石井','久米','福音寺','北久米','道後','持田','桑原','朝生田','古川','和泉','山越','衣山','三津','久万ノ台','北条','松前町','伊予市','東温市'];
+
+const QUESTIONS = [
+  { id: 'tenure', type: 'single', required: true, text: '探したい住まいはどれに近いですか？', options: [
+    { v: 'rent', t: '賃貸で探したい' }, { v: 'buy', t: '購入で探したい' }, { v: 'both', t: '賃貸・購入どちらも比較したい' }, { v: 'undecided', t: 'まだ決めきれていない' }
+  ]},
+  { id: 'timing', type: 'single', required: true, text: '住み替え・入居の時期感は？', options: [
+    { v: 'now', t: '良いところがあればすぐ' }, { v: '3m', t: '3ヶ月以内' }, { v: '6m', t: '半年以内' }, { v: '1y', t: '1年以内' }, { v: 'research', t: 'まずは情報収集' }
+  ]},
+  { id: 'area', type: 'multi', max: 3, required: true, text: '希望エリアはどのあたりですか？', help: '最大3つまで。ざっくりで大丈夫です。', options: [
+    { v: 'center', t: '松山市中心部' }, { v: 'station', t: '市駅・JR松山駅周辺' }, { v: 'dogo', t: '道後・城東方面' }, { v: 'south', t: '城南・石井・古川方面' }, { v: 'west', t: '余戸・土居田・空港方面' }, { v: 'north', t: '城北・山越・衣山方面' }, { v: 'suburb', t: '北条・東温・松前・伊予方面' }, { v: 'open', t: 'まだ決めていない' }
+  ]},
+  { id: 'towns', type: 'towns', required: false, text: '気になる町名があれば選んでください', help: '任意です。リストにない町名は自由記述へ。' },
+  { id: 'housing', type: 'single', required: true, text: '住まいの形はどれに近いですか？', options: [
+    { v: 'apartment', t: 'マンション・アパート' }, { v: 'detached', t: '戸建て' }, { v: 'either', t: 'どちらも比較したい' }, { v: 'unknown', t: 'まだ未定' }
+  ]},
+  { id: 'layout', type: 'single', required: true, text: '広さ・間取りの希望は？', options: [
+    { v: '1ldk', t: '1LDK前後' }, { v: '2ldk', t: '2LDK前後' }, { v: '3ldk', t: '3LDK前後' }, { v: '4ldk', t: '4LDK以上' }, { v: 'space', t: '部屋数より余白・収納重視' }
+  ]},
+  { id: 'parking', type: 'single', required: true, text: '駐車場の希望は？', options: [
+    { v: 'none', t: '不要、または近隣でOK' }, { v: 'one', t: '1台分ほしい' }, { v: 'two', t: '2台分ほしい' }, { v: 'guest', t: '2台以上・来客駐車も気になる' }
+  ]},
+  { id: 'age', type: 'single', required: true, text: '築年数・状態の許容感は？', options: [
+    { v: 'newer', t: '築浅・きれいな状態が安心' }, { v: 'mid', t: '築10〜20年台くらいまでなら状態次第' }, { v: 'old_ok', t: '築古でも価格と状態に納得できればOK' }, { v: 'reform', t: 'リフォーム前提でも検討したい' }
+  ]},
+  { id: 'budget_buy', branch: 'buy', type: 'single', required: true, text: '購入の場合、総額の感覚は？', options: [
+    { v: '1500', t: '〜1,500万円' }, { v: '2000', t: '1,500〜2,000万円' }, { v: '2500', t: '2,000〜2,500万円' }, { v: '3000', t: '2,500〜3,000万円' }, { v: '3500', t: '3,000〜3,500万円' }, { v: '4000', t: '3,500万円以上' }, { v: 'unknown', t: 'まだ未定' }
+  ]},
+  { id: 'budget_rent', branch: 'rent', type: 'single', required: true, text: '賃貸の場合、月額家賃の感覚は？', options: [
+    { v: '5', t: '〜5万円' }, { v: '7', t: '5〜7万円' }, { v: '9', t: '7〜9万円' }, { v: '11', t: '9〜11万円' }, { v: '13', t: '11万円以上' }, { v: 'unknown', t: 'まだ未定' }
+  ]},
+  { id: 'must', type: 'multi', max: 3, required: true, text: '削りたくない条件を3つまで選ぶなら？', options: [
+    { v: 'access', t: '通勤・買い物の便利さ' }, { v: 'quiet', t: '静かな住環境' }, { v: 'parking', t: '駐車場' }, { v: 'yard', t: '庭・外部空間' }, { v: 'storage', t: '収納' }, { v: 'school', t: '学校・子育て動線' }, { v: 'pet', t: 'ペット' }, { v: 'cost', t: '総額・月額の納得感' }
+  ]},
+  { id: 'free', type: 'textarea', required: false, text: '最後に、希望や迷っていることがあれば教えてください', help: '任意です。まだ整理できていなくても大丈夫です。' }
+];
+
+const state = {
+  source: params.get('src') || 'direct',
+  fromType: (params.get('from_type') || '').toUpperCase(),
+  answers: {},
+  flow: [],
+  currentIdx: 0,
+  events: []
+};
+
+const main = document.getElementById('main');
+const nav = document.getElementById('nav');
+const progressWrap = document.getElementById('progressWrap');
+const progressBar = document.getElementById('progressBar');
+const progressText = document.getElementById('progressText');
+const backBtn = document.getElementById('backBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+function logEvent(type, data = {}) {
+  state.events.push({ t: Date.now(), source: state.source, type, ...data });
+}
+
+function needsBuy() {
+  return ['buy', 'both', 'undecided'].includes(state.answers.tenure);
+}
+
+function needsRent() {
+  return ['rent', 'both', 'undecided'].includes(state.answers.tenure);
+}
+
+function buildFlow() {
+  const tenure = state.answers.tenure;
+  return QUESTIONS.filter(q => {
+    if (!q.branch) return true;
+    if (q.branch === 'buy') return ['buy', 'both', 'undecided'].includes(tenure);
+    if (q.branch === 'rent') return ['rent', 'both', 'undecided'].includes(tenure);
+    return true;
+  });
+}
+
+function renderTypeStrip() {
+  if (!TYPE_NAMES[state.fromType]) return '';
+  return `
+    <div class="type-strip" style="display:flex;">
+      <img src="assets/types/${state.fromType}.jpeg" alt="">
+      <div><b>${state.fromType}</b><span>${TYPE_NAMES[state.fromType]}の結果を引き継いで条件整理します</span></div>
+    </div>
+  `;
+}
+
+function renderIntro() {
+  nav.style.display = 'none';
+  progressWrap.style.display = 'none';
+  main.innerHTML = `
+    <div class="intro">
+      <div class="badge">LINEから直接入力できる希望条件フォーム</div>
+      ${renderTypeStrip()}
+      <h1>松山で探したい条件を、<br><span class="accent">ざっくり整理</span>しましょう</h1>
+      <p class="lead">賃貸・購入・未定のどれでも大丈夫です。希望エリア、駐車場、広さ、築年数、予算感を入れると、相談前の条件整理に使えます。</p>
+      <div class="notice">
+        このフォームは、住まい探しの希望条件を整理するための参考入力です。特定物件の紹介、媒介、仲介、査定、融資判断、価格保証を行うものではありません。
+      </div>
+      <button class="btn btn-primary" style="width:100%; margin-top:22px;" id="startBtn">希望条件を入力する</button>
+      <a class="btn btn-outline" href="mvp_type_diagnosis_v3.html?src=conditions_intro">先にタイプ診断を受ける</a>
+    </div>
+  `;
+  document.getElementById('startBtn').onclick = () => {
+    logEvent('conditions_start');
+    state.flow = buildFlow();
+    state.currentIdx = 0;
+    renderQuestion();
+  };
+}
+
+function renderQuestion() {
+  const q = state.flow[state.currentIdx];
+  if (!q) return;
+  progressWrap.style.display = 'flex';
+  nav.style.display = 'flex';
+  progressBar.style.width = `${Math.round((state.currentIdx / state.flow.length) * 100)}%`;
+  progressText.textContent = `${state.currentIdx + 1} / ${state.flow.length}`;
+  backBtn.style.visibility = state.currentIdx === 0 ? 'hidden' : 'visible';
+  nextBtn.textContent = state.currentIdx === state.flow.length - 1 ? '整理結果を見る' : '次へ';
+
+  let body = '';
+  if (q.type === 'single') {
+    body = q.options.map(o => `<button class="opt ${state.answers[q.id] === o.v ? 'selected' : ''}" data-v="${o.v}">${o.t}</button>`).join('');
+  } else if (q.type === 'multi') {
+    const cur = state.answers[q.id] || [];
+    body = `<div class="opt-multi-hint">最大${q.max}つまで選択できます</div>` + q.options.map(o => `<button class="opt ${cur.includes(o.v) ? 'selected' : ''}" data-v="${o.v}">${o.t}</button>`).join('');
+  } else if (q.type === 'towns') {
+    const cur = state.answers[q.id] || { towns: [], other: '' };
+    body = `
+      <div class="opt-multi-hint">複数選択可。任意なのでスキップできます。</div>
+      <div style="margin-bottom:14px;">
+        ${MATSUYAMA_TOWNS.map(t => `<button class="opt ${cur.towns.includes(t) ? 'selected' : ''}" data-v="${t}" style="display:inline-block;width:auto;margin-right:6px;font-size:13px;padding:8px 12px;">${t}</button>`).join('')}
+      </div>
+      <input type="text" class="text-input" id="otherTown" placeholder="その他の町名・エリア" value="${cur.other || ''}">
+    `;
+  } else if (q.type === 'textarea') {
+    body = `<textarea id="freeText" placeholder="例：駐車場2台はほしい、子どもの学校区で迷っている、築古でもリフォーム済みなら見たい など">${state.answers[q.id] || ''}</textarea>`;
+  }
+
+  main.innerHTML = `
+    <div class="question">
+      ${renderTypeStrip()}
+      <div class="q-label">質問 ${state.currentIdx + 1} ／ ${state.flow.length} ・ ${q.required ? '必須' : '任意'}</div>
+      <div class="q-text">${q.text}</div>
+      ${q.help ? `<div class="q-help">${q.help}</div>` : ''}
+      <div>${body}</div>
+    </div>
+  `;
+
+  bindQuestion(q);
+  updateNext(q);
+}
+
+function bindQuestion(q) {
+  main.querySelectorAll('.opt').forEach(btn => {
+    btn.onclick = () => {
+      const v = btn.dataset.v;
+      if (q.type === 'single') {
+        state.answers[q.id] = v;
+        if (q.id === 'tenure') state.flow = buildFlow();
+        main.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      } else if (q.type === 'multi') {
+        let cur = state.answers[q.id] || [];
+        if (cur.includes(v)) {
+          cur = cur.filter(x => x !== v);
+          btn.classList.remove('selected');
+        } else {
+          if (cur.length >= q.max) return;
+          cur.push(v);
+          btn.classList.add('selected');
+        }
+        state.answers[q.id] = cur;
+      } else if (q.type === 'towns') {
+        let cur = state.answers[q.id] || { towns: [], other: '' };
+        if (cur.towns.includes(v)) {
+          cur.towns = cur.towns.filter(x => x !== v);
+          btn.classList.remove('selected');
+        } else {
+          cur.towns.push(v);
+          btn.classList.add('selected');
+        }
+        state.answers[q.id] = cur;
+      }
+      logEvent('conditions_answer', { qid: q.id, val: state.answers[q.id] });
+      updateNext(q);
+    };
+  });
+  const otherTown = document.getElementById('otherTown');
+  if (otherTown) {
+    otherTown.oninput = () => {
+      const cur = state.answers[q.id] || { towns: [], other: '' };
+      cur.other = otherTown.value;
+      state.answers[q.id] = cur;
+    };
+  }
+  const freeText = document.getElementById('freeText');
+  if (freeText) {
+    freeText.oninput = () => {
+      state.answers[q.id] = freeText.value;
+    };
+  }
+}
+
+function updateNext(q) {
+  if (!q.required) { nextBtn.disabled = false; return; }
+  const a = state.answers[q.id];
+  nextBtn.disabled = q.type === 'multi' ? !a || !a.length : !a;
+}
+
+backBtn.onclick = () => {
+  if (state.currentIdx > 0) {
+    state.currentIdx--;
+    renderQuestion();
+  }
+};
+
+nextBtn.onclick = () => {
+  const q = state.flow[state.currentIdx];
+  logEvent('conditions_next', { qid: q.id });
+  if (state.currentIdx === state.flow.length - 1) {
+    renderResult();
+    return;
+  }
+  state.currentIdx++;
+  renderQuestion();
+};
+
+function label(qid, val = state.answers[qid]) {
+  const q = QUESTIONS.find(item => item.id === qid);
+  if (!q || !q.options) return '';
+  if (Array.isArray(val)) {
+    return val.map(v => (q.options.find(o => o.v === v) || {}).t || v).join('、');
+  }
+  return (q.options.find(o => o.v === val) || {}).t || '';
+}
+
+function summaryRows() {
+  const towns = state.answers.towns || { towns: [], other: '' };
+  const townText = [...towns.towns, towns.other].filter(Boolean).join('、');
+  const rows = [
+    ['探し方', label('tenure')],
+    ['時期', label('timing')],
+    ['希望エリア', label('area')],
+    ['町名', townText || '未入力'],
+    ['住まいの形', label('housing')],
+    ['広さ', label('layout')],
+    ['駐車場', label('parking')],
+    ['築年数', label('age')]
+  ];
+  if (needsBuy()) rows.push(['購入予算感', label('budget_buy') || '未入力']);
+  if (needsRent()) rows.push(['賃貸家賃感', label('budget_rent') || '未入力']);
+  rows.push(['譲れない条件', label('must')]);
+  return rows;
+}
+
+function conditionComment() {
+  const a = state.answers;
+  const parts = [];
+  if ((a.area || []).includes('center') || (a.area || []).includes('station')) parts.push('中心部・駅近');
+  if (['two', 'guest'].includes(a.parking)) parts.push('駐車場2台以上');
+  if (['3ldk', '4ldk', 'space'].includes(a.layout)) parts.push('広さ');
+  if (a.age === 'newer') parts.push('築浅・良状態');
+  if (parts.length >= 3) return `${parts.join('・')}を同時に満たす条件です。希望が明確な分、候補は絞られやすいので、優先順位を決めておくと相談が進めやすくなります。`;
+  if (parts.length >= 1) return `${parts.join('・')}を重視する条件です。松山圏では、エリアと駐車場、築年数のどこを動かせるかで候補の広がりが変わりやすいです。`;
+  return '現時点では比較の幅を広く取れる条件です。まずはエリア、駐車場、築年数の優先順位を整理すると、次の相談がしやすくなります。';
+}
+
+function suggestions() {
+  const a = state.answers;
+  const list = [];
+  if (a.age === 'newer') list.push('築年数を「状態が良ければ築10〜20年台」まで広げると候補が増えやすいです');
+  if ((a.area || []).length === 1) list.push('隣接エリアを1つ足すと、同じ予算感で比較しやすくなります');
+  if (['two', 'guest'].includes(a.parking)) list.push('駐車場は台数だけでなく、出し入れのしやすさも確認ポイントに入れるのがおすすめです');
+  if ((a.must || []).includes('cost')) list.push('総額・月額だけでなく、管理費・修繕費・初期費用もセットで見ると判断しやすくなります');
+  if (!list.length) list.push('条件は比較的バランス型です。内見前に「絶対条件」と「あれば嬉しい条件」を分けると進めやすくなります');
+  return list.slice(0, 3);
+}
+
+function renderResult() {
+  nav.style.display = 'none';
+  progressWrap.style.display = 'flex';
+  progressBar.style.width = '100%';
+  progressText.textContent = '完了';
+  logEvent('conditions_complete');
+  const rows = summaryRows();
+  const payload = {
+    diagnosisVersion: 'conditions_standalone_v1',
+    source: state.source,
+    fromType: state.fromType || null,
+    answers: state.answers,
+    rows,
+    events: state.events
+  };
+  localStorage.setItem('frejuno_conditions_latest', JSON.stringify(payload));
+  console.log('=== FREJUNO 希望条件入力ペイロード ===');
+  console.log(JSON.stringify(payload, null, 2));
+  main.innerHTML = `
+    <div class="result-hero">
+      <h2>希望条件を整理しました</h2>
+      <p class="lead">LINE相談や物件探しの前に、いまの条件をざっくり確認できます。</p>
+    </div>
+    ${renderTypeStrip()}
+    <div class="result-section">
+      <div class="result-label">入力内容</div>
+      <div class="result-card">
+        ${rows.map(r => `<div class="summary-row"><div class="summary-key">${r[0]}</div><div class="summary-val">${r[1]}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="result-section">
+      <div class="result-label">条件の見立て</div>
+      <div class="result-card">${conditionComment()}</div>
+    </div>
+    <div class="result-section">
+      <div class="result-label">相談前に見るポイント</div>
+      <div class="result-card">${suggestions().map(s => `<div class="suggestion-item">${s}</div>`).join('')}</div>
+    </div>
+    <button class="btn btn-line" id="lineBtn">LINEでこの条件をもとに相談する</button>
+    <a class="btn btn-outline" href="mvp_type_diagnosis_v3.html?src=conditions_result">タイプ診断も受ける</a>
+    <div class="legal-footer">
+      本ページは住まい選びの希望条件を整理するための参考情報です。特定の物件、価格、将来価値、融資、購入可否を保証するものではありません。<br>
+      © FREJUNO 松山住まい診断（希望条件プロトタイプ）
+    </div>
+  `;
+  document.getElementById('lineBtn').onclick = () => {
+    logEvent('line_clicked', { from: 'conditions_result' });
+    alert('（プロトタイプ）本番ではLINE公式アカウントの相談導線に遷移します。');
+  };
+}
+
+renderIntro();
+</script>
+</body>
+</html>
