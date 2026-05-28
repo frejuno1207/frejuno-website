@@ -20,8 +20,9 @@
     border-bottom: 1px solid #eef1f4;
     position: sticky; top: 0; background: #fff; z-index: 10;
   }
-  .brand { font-size: 14px; font-weight: 600; color: #2c5f7e; letter-spacing: 0.04em; }
-  .brand .accent { color: #d97744; }
+  .brand { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #5b6b7c; letter-spacing: 0.02em; }
+  .brand img { display: block; width: auto; height: 34px; }
+  .brand .accent { color: #d97744; font-weight: 700; }
   .progress-wrap { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
   .progress-track { flex: 1; height: 4px; background: #eef1f4; border-radius: 2px; overflow: hidden; }
   .progress-bar { height: 100%; background: linear-gradient(90deg, #2c5f7e, #4a9b8e); width: 0%; transition: width 0.35s cubic-bezier(.2,.7,.3,1); }
@@ -174,7 +175,7 @@
 <body>
 <div id="app">
   <header>
-    <div class="brand">FREJUNO｜松山住まい診断 <span class="accent">16タイプ</span></div>
+    <div class="brand"><img src="../images/logo.png?v=20260528-logo-1" alt="FREJUNO"><span>松山住まい診断 <span class="accent">16タイプ</span></span></div>
     <div class="progress-wrap" id="progressWrap" style="display:none;">
       <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
       <div class="progress-text" id="progressText">0 / 0</div>
