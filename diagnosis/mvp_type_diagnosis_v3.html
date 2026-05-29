@@ -541,6 +541,86 @@ const DEEP_QUESTIONS = [
 ];
 
 // ============================================================
+// Config
+// ============================================================
+// LINE公式アカウントID（@xxxxxxx形式）。未設定の場合はoaMessage遷移をスキップしてLINEアプリ起動のみ
+const LINE_OA_ID = '@225zymbg';
+// 診断結果ページの永続URL（LINEに送る再表示URL）
+const RESULT_PAGE_URL = location.origin + location.pathname;
+// Google Apps Script Web App URL（Sheetsへの保存先）。未設定なら保存スキップ。
+// デプロイ手順は FREJUNO_GAS_SETUP.md を参照
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwGskOqXnV9teh0sCywn-IGgk0eOAtwGwVRJ7DkmsUXfIHuk4jAC5UyDfyH5v3DJijcKw/exec';
+
+// ============================================================
+// Identity (session_id + share_code)
+// ============================================================
+function getOrCreateSessionId() {
+  try {
+    let id = localStorage.getItem('frejuno_session_id');
+    if (!id) {
+      id = 'sess_' + (crypto.randomUUID ? crypto.randomUUID() : (Date.now() + '_' + Math.random().toString(36).slice(2,10)));
+      localStorage.setItem('frejuno_session_id', id);
+    }
+    return id;
+  } catch (e) { return 'sess_volatile_' + Date.now(); }
+}
+function getOrCreateShareCode() {
+  try {
+    let code = localStorage.getItem('frejuno_share_code');
+    if (!code) {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // 紛らわしい文字除外
+      code = '';
+      for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+      localStorage.setItem('frejuno_share_code', code);
+    }
+    return code;
+  } catch (e) { return 'TMP' + Math.floor(Math.random() * 1000); }
+}
+const SESSION_ID = getOrCreateSessionId();
+// URL ?sc= があれば優先してlocalStorageを上書き（別端末で永続URLから来た時に同一share_codeで動く）
+const URL_SC = (new URLSearchParams(window.location.search)).get('sc');
+if (URL_SC) { try { localStorage.setItem('frejuno_share_code', URL_SC); } catch (e) {} }
+const SHARE_CODE = URL_SC || getOrCreateShareCode();
+
+// ============================================================
+// Backend POST (Google Apps Script Web App, fire-and-forget)
+// CORS preflight回避のため text/plain で送信。GAS側はJSONとしてパース。
+// ============================================================
+function postToBackend(eventType, extra) {
+  if (!BACKEND_URL) return;
+  const payload = Object.assign({
+    sessionId: SESSION_ID,
+    shareCode: SHARE_CODE,
+    eventType: eventType,
+    source: state.source,
+    page: 'diagnosis_v3',
+    ts: new Date().toISOString(),
+    typeCode: state.typeCode || null,
+    lightAnswers: state.lightAnswers,
+    deepAnswers: state.deepAnswers,
+    axes: state.lightResult && state.lightResult.axes,
+    userAgent: navigator.userAgent,
+    referrer: document.referrer || ''
+  }, extra || {});
+  try {
+    const body = JSON.stringify(payload);
+    // sendBeacon優先（タブ閉じても飛ぶ）。失敗したらfetch no-corsで代替。
+    if (navigator.sendBeacon) {
+      const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+      const ok = navigator.sendBeacon(BACKEND_URL, blob);
+      if (ok) return;
+    }
+    fetch(BACKEND_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: body,
+      keepalive: true
+    }).catch(() => {});
+  } catch (e) { /* swallow */ }
+}
+
+// ============================================================
 // State
 // ============================================================
 const state = {
@@ -811,6 +891,10 @@ function renderTypeResult() {
   state.lightResult = result;
   const typeData = TYPES[result.code];
   logEvent('type_classified', { code: result.code, tally: result.tally, axes: result.axes });
+  // Backend保存（fire-and-forget）
+  postToBackend('type_classified', { tally: result.tally });
+  // localStorageにも結果を残しておく（永続URL再表示時のフォールバック）
+  try { localStorage.setItem('frejuno_last_type', result.code); } catch (e) {}
 
   progressBar.style.width = '100%';
   progressText.textContent = `タイプ判定完了`;
@@ -846,6 +930,9 @@ function renderTypeResult() {
       <div class="cta-headline">このタイプに近い探し方を<br>LINEで整理しませんか？</div>
       <div class="cta-sub">結果を保存し、希望エリアや駐車場の有無を入れると、条件整理の精度が上がります（任意）</div>
       <button class="btn btn-line" id="lineBtn">LINEで結果を保存する</button>
+      <div style="margin-top:10px; font-size:11px; color:#95a4b3; text-align:center;">
+        照会コード <b style="color:#2c5f7e; letter-spacing:0.08em;">${SHARE_CODE}</b>
+      </div>
     </div>
 
     <div class="cta-section">
@@ -861,12 +948,154 @@ function renderTypeResult() {
   `;
 
   document.getElementById('lineBtn').onclick = () => {
-    logEvent('line_clicked', { from: 'type_result' });
-    alert('（プロトタイプ）本番ではLINE公式アカウントの友だち追加URLに遷移します。');
+    logEvent('line_clicked', { from: 'type_result', typeCode: state.typeCode });
+    sendResultToLine(state.typeCode);
   };
   document.getElementById('deepBtn').onclick = () => {
     logEvent('conditions_link_clicked', { from: 'type_result', typeCode: state.typeCode });
     window.location.href = `conditions.html?src=type_result&from_type=${encodeURIComponent(state.typeCode)}`;
+  };
+}
+
+// ============================================================
+// Permalink re-display (LINE経由の再閲覧用)
+// state.lightAnswersなしでも結果カードを表示する。
+// 軸バランス・境界注記など回答依存パートはスキップ。
+// ============================================================
+function buildLineMessage(code, shareCodeOverride) {
+  const typeData = TYPES[code];
+  const name = typeData ? `${typeData.nick} / ${typeData.name}` : '';
+  const sc = shareCodeOverride || SHARE_CODE;
+  const url = `${RESULT_PAGE_URL}?result=${encodeURIComponent(code)}&src=line_saved_result&sc=${encodeURIComponent(sc)}`;
+  return [
+    `診断結果: ${code} ${name}`,
+    `照会コード: ${sc}`,
+    `結果ページ:`,
+    url,
+    ``,
+    `希望条件も入力したいです。`
+  ].join('\n');
+}
+
+function sendResultToLine(code, shareCodeOverride) {
+  const msg = buildLineMessage(code, shareCodeOverride);
+  if (!LINE_OA_ID || LINE_OA_ID === '@your_line_id') {
+    // ID未設定時はクリップボードに送信内容をコピー＋アラート
+    if (navigator.clipboard) navigator.clipboard.writeText(msg).catch(() => {});
+    alert('LINE公式アカウントID未設定のため、送信内容をクリップボードにコピーしました。\n\n' + msg);
+    return;
+  }
+  const encoded = encodeURIComponent(msg);
+  window.location.href = `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OA_ID)}/?${encoded}`;
+}
+
+function renderTypeResultFromCode(code, opts) {
+  const typeData = TYPES[code];
+  if (!typeData) {
+    // 不正コードならイントロにフォールバック
+    renderIntro();
+    return;
+  }
+  state.stage = 'type_result';
+  state.typeCode = code;
+  state.lightResult = null; // 軸データは持たない
+  logEvent('type_replayed', { code, src: (opts && opts.source) || state.source });
+
+  progressBar.style.width = '100%';
+  progressText.textContent = `タイプ結果（再表示）`;
+  nav.style.display = 'none';
+
+  const replayBanner = `
+    <div class="boundary-note" style="background:#eef5f9;color:#2c5f7e;border-color:#cfe1ec;">
+      LINEに保存した結果ページを表示しています。詳細スコアは初回診断時のみ表示されます。
+    </div>
+  `;
+
+  // demandTagsとnext-listはタイプ情報のみで描画可能
+  const tags = (typeData.demandTags || []).map(tag => `<span class="tag">${tag}</span>`).join('');
+  const nextInputs = [
+    '希望エリア：ざっくりでOK',
+    '駐車場：必要台数',
+    '住まいの形：賃貸 / 購入 / まだ未定',
+    '広さ：1LDK、2LDK、3LDKなど',
+    '時期：すぐ / 半年以内 / 1年以内 / 情報収集',
+    '築年数・リフォームの許容感'
+  ];
+
+  main.innerHTML = `
+    <div class="completion-thanks">
+      <h2>あなたの松山住まいタイプ</h2>
+      <p>${typeData.code} ${typeData.nick}</p>
+    </div>
+
+    <div class="type-card">
+      ${renderTypeVisual(typeData)}
+      <div class="type-result-label">YOUR HOUSING TYPE</div>
+      <div class="type-code">${typeData.code}</div>
+      <div class="type-nickname">${typeData.nick}</div>
+      <div class="type-name">${typeData.name}</div>
+      <div class="type-oneliner">${typeData.line}</div>
+      <div class="type-match-label">松山での相性</div>
+      <div class="type-match">${typeData.match}</div>
+    </div>
+
+    ${replayBanner}
+
+    <div class="insight-section">
+      <div class="insight-card">
+        <div class="insight-title">合いやすい条件</div>
+        <div class="tag-list">${tags}</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-title">次に入力すると精度が上がる情報</div>
+        <ul class="next-list">${nextInputs.map(item => `<li>${item}</li>`).join('')}</ul>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <div class="cta-headline">このタイプに近い探し方を<br>LINEで整理しませんか？</div>
+      <div class="cta-sub">希望エリアや駐車場の有無を入れると、条件整理の精度が上がります（任意）</div>
+      <button class="btn btn-line" id="lineBtn">LINEで結果を保存する</button>
+      <div style="margin-top:10px; font-size:11px; color:#95a4b3; text-align:center;">
+        照会コード <b style="color:#2c5f7e; letter-spacing:0.08em;">${(opts && opts.shareCode) || SHARE_CODE}</b>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <div class="cta-headline" style="font-size:15px;">もっと詳しく希望条件を入れて、<br>松山の物件マッチングを精密化しますか？</div>
+      <div class="cta-sub">希望エリア・予算・築年数・駐車場などを別ページで整理します（任意）</div>
+      <button class="btn btn-outline" id="deepBtn">希望条件を入力する</button>
+    </div>
+
+    <div class="cta-section">
+      <button class="btn btn-secondary" id="restartBtn" style="width:100%;">最初から診断をやり直す</button>
+    </div>
+
+    <div class="legal-footer">
+      本診断は住まい選びの傾向を整理するための参考情報です。<br>
+      © FREJUNO 松山住まい診断（プロトタイプ v3）
+    </div>
+  `;
+
+  const effectiveShareCode = (opts && opts.shareCode) || SHARE_CODE;
+  document.getElementById('lineBtn').onclick = () => {
+    logEvent('line_clicked', { from: 'type_result_replay', typeCode: code, sc: effectiveShareCode });
+    sendResultToLine(code, effectiveShareCode);
+  };
+  document.getElementById('deepBtn').onclick = () => {
+    logEvent('conditions_link_clicked', { from: 'type_result_replay', typeCode: code, sc: effectiveShareCode });
+    window.location.href = `conditions.html?src=type_result_replay&from_type=${encodeURIComponent(code)}&sc=${encodeURIComponent(effectiveShareCode)}`;
+  };
+  document.getElementById('restartBtn').onclick = () => {
+    logEvent('replay_restart', { typeCode: code });
+    // パラメータを落としてintroへ
+    history.replaceState({}, '', location.pathname);
+    state.lightAnswers = {};
+    state.deepAnswers = {};
+    state.currentIdx = 0;
+    state.typeCode = null;
+    state.lightResult = null;
+    renderIntro();
   };
 }
 
@@ -1114,6 +1343,8 @@ function renderFinal() {
   const comment = generateDifficultyComment();
   const sugg = generateSuggestions();
   logEvent('final_complete', { totalDwellMs: Date.now() - (state.events[0]?.t || Date.now()) });
+  // Backend保存（詳細回答含む完成版）
+  postToBackend('final_complete', { branch: state.branch, summary: rows });
 
   main.innerHTML = `
     <div class="completion-thanks">
@@ -1192,8 +1423,8 @@ function renderFinal() {
   `;
 
   document.getElementById('lineBtnFinal').onclick = () => {
-    logEvent('line_clicked', { from: 'final' });
-    alert('（プロトタイプ）本番ではLINE公式アカウントの友だち追加URLに遷移します。');
+    logEvent('line_clicked', { from: 'final', typeCode: state.typeCode });
+    sendResultToLine(state.typeCode);
   };
   document.getElementById('saveOptBtn').onclick = () => {
     const loan = document.getElementById('optLoan').value;
@@ -1236,7 +1467,16 @@ function finalize() {
 // ============================================================
 // Start
 // ============================================================
-renderIntro();
+(function bootstrap() {
+  const params = new URLSearchParams(window.location.search);
+  const resultCode = (params.get('result') || '').toUpperCase();
+  const sc = params.get('sc') || null; // permalink元のshare_code（あれば優先表示）
+  if (resultCode && typeof TYPES !== 'undefined' && TYPES[resultCode]) {
+    renderTypeResultFromCode(resultCode, { source: state.source, shareCode: sc });
+    return;
+  }
+  renderIntro();
+})();
 </script>
 </body>
 </html>
