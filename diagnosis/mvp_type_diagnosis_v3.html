@@ -1185,6 +1185,8 @@ function renderTypeResultFromCode(code, opts) {
   state.typeCode = code;
   state.lightResult = null; // 軸データは持たない
   logEvent('type_replayed', { code, src: (opts && opts.source) || state.source });
+  // localStorage にもタイプを残す（/me/からのリダイレクトで使う）
+  try { localStorage.setItem('frejuno_last_type', code); } catch (e) {}
 
   progressBar.style.width = '100%';
   progressText.textContent = `タイプ結果（再表示）`;

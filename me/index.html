@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あなたの診断結果｜FREJUNO 松山住まいタイプ診断</title>
+<meta name="description" content="あなたの松山住まいタイプ診断の結果ページを表示します。">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2HZT0DCJBY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2HZT0DCJBY', { send_page_view: true });
+</script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+         background: #f4f6f9; color: #2c3e50; line-height: 1.7; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  .wrap { max-width: 560px; margin: 0 auto; min-height: 100vh; background: #fff; padding: 40px 24px;
+          display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+  .brand { font-size: 14px; font-weight: 600; color: #2c5f7e; margin-bottom: 8px; text-align: center; }
+  .brand .accent { color: #d97744; }
+  .loader { width: 36px; height: 36px; border: 3px solid #eef1f4; border-top-color: #2c5f7e; border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .msg { font-size: 14px; color: #5b6b7c; text-align: center; }
+  h1 { font-size: 22px; color: #2c3e50; text-align: center; line-height: 1.5; margin-top: 12px; }
+  .lead { font-size: 14px; color: #5b6b7c; text-align: center; max-width: 380px; }
+  .btn { display: block; width: 100%; max-width: 360px; padding: 14px 22px; margin-top: 12px;
+         border-radius: 10px; font-size: 15px; font-weight: 600; text-align: center; text-decoration: none; cursor: pointer; border: none; font-family: inherit; }
+  .btn-primary { background: #2c5f7e; color: #fff; }
+  .btn-outline { background: transparent; color: #2c5f7e; border: 1.5px solid #2c5f7e; }
+  .hidden { display: none !important; }
+  .footer { margin-top: 40px; font-size: 11px; color: #95a4b3; text-align: center; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">FREJUNO <span class="accent">松山住まいタイプ診断</span></div>
+
+  <!-- A: 自動リダイレクト中 -->
+  <div id="state-loading">
+    <div class="loader" style="margin: 24px auto;"></div>
+    <div class="msg">あなたの診断結果を表示しています…</div>
+  </div>
+
+  <!-- B: 未診断 -->
+  <div id="state-undiagnosed" class="hidden" style="text-align:center;">
+    <h1>まだ診断を受けていません</h1>
+    <p class="lead">7問・約2分の診断であなたの松山住まいタイプが判定できます。診断結果はこのページから次回もご確認いただけます。</p>
+    <a class="btn btn-primary" id="ctaDiag" href="/diagnosis/diagnosis_lp.html?src=me_undiagnosed">タイプ診断を受ける</a>
+    <a class="btn btn-outline" href="/types/?src=me_undiagnosed">先に16タイプを見る</a>
+  </div>
+
+  <!-- C: 不正なタイプコード -->
+  <div id="state-invalid" class="hidden" style="text-align:center;">
+    <h1>結果データが見つかりませんでした</h1>
+    <p class="lead">もう一度診断を受けるか、LINEに保存した結果ページのURLからアクセスしてください。</p>
+    <a class="btn btn-primary" href="/diagnosis/diagnosis_lp.html?src=me_invalid">タイプ診断を受ける</a>
+  </div>
+
+  <div class="footer">
+    本ページは住まい選びの傾向を整理するための参考情報です。<br>
+    © FREJUNO 松山住まいタイプ診断
+  </div>
+</div>
+
+<script>
+(function smartRedirect() {
+  const VALID_TYPES = ['UMIS','UMIV','UMFS','UMFV','UWIS','UWIV','UWFS','UWFV','RMIS','RMIV','RMFS','RMFV','RWIS','RWIV','RWFS','RWFV'];
+  const params = new URLSearchParams(window.location.search);
+  const src = params.get('src') || 'me_direct';
+  const urlType = (params.get('type') || '').toUpperCase();
+
+  function showState(id) {
+    document.getElementById('state-loading').classList.add('hidden');
+    document.getElementById('state-undiagnosed').classList.add('hidden');
+    document.getElementById('state-invalid').classList.add('hidden');
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  function logToGA(eventName, params) {
+    if (typeof gtag === 'function') {
+      try { gtag('event', eventName, Object.assign({ src }, params || {})); } catch(e) {}
+    }
+  }
+
+  let code = urlType;
+  if (!code) {
+    try { code = (localStorage.getItem('frejuno_last_type') || '').toUpperCase(); } catch (e) { code = ''; }
+  }
+
+  // 短い遅延でローディングを見せてから判定
+  setTimeout(function() {
+    if (!code) {
+      // 未診断
+      logToGA('me_undiagnosed');
+      showState('state-undiagnosed');
+      return;
+    }
+    if (!VALID_TYPES.includes(code)) {
+      // 不正コード
+      logToGA('me_invalid_code', { code });
+      showState('state-invalid');
+      return;
+    }
+    // 有効なコード → typesページへリダイレクト
+    logToGA('me_redirect', { type_code: code });
+    const target = '/types/' + code + '.html?src=me_auto_' + encodeURIComponent(src);
+    window.location.replace(target);
+  }, 300);
+})();
+</script>
+</body>
+</html>
