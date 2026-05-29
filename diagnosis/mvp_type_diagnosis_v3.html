@@ -4,12 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>FREJUNO 松山住まい診断 16タイプ</title>
-<link rel="icon" href="/favicon.ico?v=20260527-mark-1" sizes="any">
-<link rel="icon" href="/favicon-48x48.png?v=20260527-mark-1" type="image/png" sizes="48x48">
-<link rel="icon" href="/favicon-96x96.png?v=20260527-mark-1" type="image/png" sizes="96x96">
-<link rel="icon" href="/favicon-32x32.png?v=20260527-mark-1" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20260527-mark-1">
-<link rel="manifest" href="/site.webmanifest?v=20260527-mark-1">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body {
@@ -26,9 +20,8 @@
     border-bottom: 1px solid #eef1f4;
     position: sticky; top: 0; background: #fff; z-index: 10;
   }
-  .brand { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #5b6b7c; letter-spacing: 0.02em; }
-  .brand img { display: block; width: auto; height: 34px; }
-  .brand .accent { color: #d97744; font-weight: 700; }
+  .brand { font-size: 14px; font-weight: 600; color: #2c5f7e; letter-spacing: 0.04em; }
+  .brand .accent { color: #d97744; }
   .progress-wrap { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
   .progress-track { flex: 1; height: 4px; background: #eef1f4; border-radius: 2px; overflow: hidden; }
   .progress-bar { height: 100%; background: linear-gradient(90deg, #2c5f7e, #4a9b8e); width: 0%; transition: width 0.35s cubic-bezier(.2,.7,.3,1); }
@@ -181,7 +174,7 @@
 <body>
 <div id="app">
   <header>
-    <div class="brand"><img src="../images/logo.png?v=20260528-logo-1" alt="FREJUNO"><span>松山住まい診断 <span class="accent">16タイプ</span></span></div>
+    <div class="brand">FREJUNO｜松山住まい診断 <span class="accent">16タイプ</span></div>
     <div class="progress-wrap" id="progressWrap" style="display:none;">
       <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
       <div class="progress-text" id="progressText">0 / 0</div>
@@ -545,6 +538,8 @@ const DEEP_QUESTIONS = [
 // ============================================================
 // LINE公式アカウントID（@xxxxxxx形式）。未設定の場合はoaMessage遷移をスキップしてLINEアプリ起動のみ
 const LINE_OA_ID = '@225zymbg';
+// 友だち追加URL（oaMessageは友だち追加後のみ動作するため、未追加ユーザー向けに併設）
+const LINE_FRIEND_URL = 'https://line.me/R/ti/p/' + encodeURIComponent(LINE_OA_ID);
 // 診断結果ページの永続URL（LINEに送る再表示URL）
 const RESULT_PAGE_URL = location.origin + location.pathname;
 // Google Apps Script Web App URL（Sheetsへの保存先）。未設定なら保存スキップ。
@@ -930,8 +925,50 @@ function renderTypeResult() {
       <div class="cta-headline">このタイプに近い探し方を<br>LINEで整理しませんか？</div>
       <div class="cta-sub">結果を保存し、希望エリアや駐車場の有無を入れると、条件整理の精度が上がります（任意）</div>
       <button class="btn btn-line" id="lineBtn">LINEで結果を保存する</button>
+      <div style="margin-top:8px; font-size:12px; text-align:center;">
+        <a href="${LINE_FRIEND_URL}" target="_blank" rel="noopener" id="lineFriendBtn"
+           style="color:#06c755; text-decoration:underline;">
+          まだ友だち追加していない方はこちら
+        </a>
+      </div>
       <div style="margin-top:10px; font-size:11px; color:#95a4b3; text-align:center;">
         照会コード <b style="color:#2c5f7e; letter-spacing:0.08em;">${SHARE_CODE}</b>
+      </div>
+    </div>
+
+    <div class="stage1-block" id="stage1Block" style="margin: 20px 0; padding: 22px 20px; background: #fff3eb; border-radius: 14px;">
+      <div style="font-size:11px; font-weight:700; letter-spacing:0.12em; color:#c66135; margin-bottom:8px;">QUICK FOLLOW-UP（任意・30秒）</div>
+      <div style="font-size:16px; font-weight:700; color:#2c3e50; margin-bottom:6px;">もう少しだけ、解像度を上げませんか？</div>
+      <div style="font-size:13px; color:#5b6b7c; margin-bottom:16px;">物件のご紹介やエリア提案の精度が上がります。回答内容は条件整理にのみ使用します。</div>
+
+      <div class="s1-q" style="margin-bottom:14px;">
+        <div style="font-size:13px; font-weight:600; color:#2c3e50; margin-bottom:6px;">いまの検討段階は？</div>
+        <div id="s1-seriousness" class="s1-pills"></div>
+      </div>
+
+      <div class="s1-q" style="margin-bottom:14px;">
+        <div style="font-size:13px; font-weight:600; color:#2c3e50; margin-bottom:6px;">住み替え・入居の時期は？</div>
+        <div id="s1-timing" class="s1-pills"></div>
+      </div>
+
+      <div class="s1-q" style="margin-bottom:14px;">
+        <div style="font-size:13px; font-weight:600; color:#2c3e50; margin-bottom:6px;">賃貸 / 購入の希望は？</div>
+        <div id="s1-tenure" class="s1-pills"></div>
+      </div>
+
+      <div class="s1-q" style="margin-bottom:14px;">
+        <div style="font-size:13px; font-weight:600; color:#2c3e50; margin-bottom:6px;">世帯人数は？</div>
+        <div id="s1-household" class="s1-pills"></div>
+      </div>
+
+      <div class="s1-q" style="margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; color:#2c3e50; margin-bottom:6px;">月々・総額の予算感（任意）</div>
+        <input type="text" id="s1-budget" class="text-input" placeholder="例：賃貸8万円 / 購入2500万円 / 未定" style="margin-bottom:0;">
+      </div>
+
+      <button class="btn btn-primary" id="s1-send" style="width:100%;">回答を送信</button>
+      <div id="s1-thanks" style="display:none; margin-top:14px; padding:12px; background:#e6f4ec; color:#2c5f7e; border-radius:8px; font-size:13px; text-align:center;">
+        ご回答ありがとうございます！ LINE経由で続きをご案内します。
       </div>
     </div>
 
@@ -947,6 +984,9 @@ function renderTypeResult() {
     </div>
   `;
 
+  // Stage 1 pills生成
+  renderStage1Pills();
+
   document.getElementById('lineBtn').onclick = () => {
     logEvent('line_clicked', { from: 'type_result', typeCode: state.typeCode });
     sendResultToLine(state.typeCode);
@@ -955,6 +995,85 @@ function renderTypeResult() {
     logEvent('conditions_link_clicked', { from: 'type_result', typeCode: state.typeCode });
     window.location.href = `conditions.html?src=type_result&from_type=${encodeURIComponent(state.typeCode)}`;
   };
+  document.getElementById('s1-send').onclick = submitStage1;
+}
+
+// ============================================================
+// Stage 1 ミニ質問
+// ============================================================
+const STAGE1_SCHEMA = {
+  seriousness: {
+    label: 'seriousness',
+    options: [
+      { v: 'browse', t: '情報収集中' },
+      { v: 'considering', t: '具体的に検討中' },
+      { v: 'ready', t: 'すぐ動きたい' }
+    ]
+  },
+  timing: {
+    label: 'timing',
+    options: [
+      { v: '3m', t: '3ヶ月以内' },
+      { v: '6m', t: '半年以内' },
+      { v: '1y', t: '1年以内' },
+      { v: 'undecided', t: '未定' }
+    ]
+  },
+  tenure: {
+    label: 'tenure',
+    options: [
+      { v: 'rent', t: '賃貸寄り' },
+      { v: 'buy', t: '購入寄り' },
+      { v: 'both', t: 'どちらも比較' },
+      { v: 'undecided', t: 'まだ未定' }
+    ]
+  },
+  household: {
+    label: 'household',
+    options: [
+      { v: '1', t: '1人' },
+      { v: '2', t: '2人' },
+      { v: '3', t: '3人' },
+      { v: '4plus', t: '4人以上' }
+    ]
+  }
+};
+state.stage1 = state.stage1 || {};
+
+function renderStage1Pills() {
+  for (const [qid, qDef] of Object.entries(STAGE1_SCHEMA)) {
+    const wrap = document.getElementById('s1-' + qid);
+    if (!wrap) continue;
+    wrap.style.cssText = 'display:flex; flex-wrap:wrap; gap:6px;';
+    wrap.innerHTML = qDef.options.map(o =>
+      `<button type="button" class="s1-pill" data-q="${qid}" data-v="${o.v}"
+       style="padding:8px 14px; border:1.5px solid #e4d6c9; background:#fff; border-radius:999px; font-size:13px; color:#2c3e50; cursor:pointer; font-family:inherit;">${o.t}</button>`
+    ).join('');
+  }
+  document.querySelectorAll('.s1-pill').forEach(btn => {
+    btn.onclick = () => {
+      const q = btn.dataset.q;
+      const v = btn.dataset.v;
+      state.stage1[q] = v;
+      document.querySelectorAll(`.s1-pill[data-q="${q}"]`).forEach(b => {
+        b.style.background = '#fff';
+        b.style.borderColor = '#e4d6c9';
+        b.style.fontWeight = '400';
+      });
+      btn.style.background = '#fff3eb';
+      btn.style.borderColor = '#c66135';
+      btn.style.fontWeight = '700';
+    };
+  });
+}
+
+function submitStage1() {
+  state.stage1.budget = document.getElementById('s1-budget')?.value || '';
+  logEvent('stage1_complete', { stage1: state.stage1, typeCode: state.typeCode });
+  postToBackend('stage1_complete', { stage1: state.stage1 });
+  // UIを完了状態に
+  document.getElementById('s1-send').style.display = 'none';
+  document.getElementById('s1-thanks').style.display = 'block';
 }
 
 // ============================================================
@@ -1056,6 +1175,12 @@ function renderTypeResultFromCode(code, opts) {
       <div class="cta-headline">このタイプに近い探し方を<br>LINEで整理しませんか？</div>
       <div class="cta-sub">希望エリアや駐車場の有無を入れると、条件整理の精度が上がります（任意）</div>
       <button class="btn btn-line" id="lineBtn">LINEで結果を保存する</button>
+      <div style="margin-top:8px; font-size:12px; text-align:center;">
+        <a href="${LINE_FRIEND_URL}" target="_blank" rel="noopener" id="lineFriendBtn"
+           style="color:#06c755; text-decoration:underline;">
+          まだ友だち追加していない方はこちら
+        </a>
+      </div>
       <div style="margin-top:10px; font-size:11px; color:#95a4b3; text-align:center;">
         照会コード <b style="color:#2c5f7e; letter-spacing:0.08em;">${(opts && opts.shareCode) || SHARE_CODE}</b>
       </div>
@@ -1385,6 +1510,12 @@ function renderFinal() {
     </div>
 
     <button class="btn btn-line" id="lineBtnFinal">LINEで結果を保存し、探し方を相談する</button>
+    <div style="margin-top:8px; margin-bottom:18px; font-size:12px; text-align:center;">
+      <a href="${LINE_FRIEND_URL}" target="_blank" rel="noopener"
+         style="color:#06c755; text-decoration:underline;">
+        まだ友だち追加していない方はこちら
+      </a>
+    </div>
 
     <div class="optional-section">
       <h3>もう少し詳しく教えていただけると、より精度高くお返しできます</h3>
