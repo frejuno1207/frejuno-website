@@ -7,8 +7,8 @@
     '<nav class="dx-nav" id="dxNav">' +
       '<div class="dx-nav-inner">' +
         '<a class="dx-nav-brand" href="/diagnosis/diagnosis_lp.html">' +
-          '<span class="dx-brand-mark">F</span>' +
-          '<span class="dx-brand-text">FREJUNO <span class="dx-brand-accent">松山住まい診断</span></span>' +
+          '<img class="dx-brand-img" src="/images/logo.png?v=20260528-logo-1" alt="FREJUNO" />' +
+          '<span class="dx-brand-suffix">松山住まい診断</span>' +
         '</a>' +
         '<button class="dx-nav-toggle" id="dxNavToggle" aria-label="メニュー" aria-expanded="false">' +
           '<span></span><span></span><span></span>' +
@@ -28,9 +28,9 @@
   var NAV_CSS = '' +
     '.dx-nav{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1px solid #eef1f4;box-shadow:0 1px 0 rgba(0,0,0,0.02);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;}' +
     '.dx-nav-inner{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;}' +
-    '.dx-nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#2c3e50;font-weight:700;font-size:14px;flex-shrink:0;}' +
-    '.dx-brand-mark{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#2c5f7e,#4a9b8e);color:#fff;font-weight:800;font-size:14px;}' +
-    '.dx-brand-accent{color:#d97744;font-weight:700;}' +
+    '.dx-nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#2c3e50;font-weight:700;font-size:13px;flex-shrink:0;}' +
+    '.dx-brand-img{display:block;height:30px;width:auto;background:transparent;}' +
+    '.dx-brand-suffix{color:#d97744;font-weight:700;font-size:11px;border-left:1px solid #eef1f4;padding-left:10px;letter-spacing:0.04em;}' +
     '.dx-nav-menu{display:flex;align-items:center;gap:4px;list-style:none;padding:0;margin:0;}' +
     '.dx-nav-menu li a{display:block;padding:8px 12px;color:#5b6b7c;font-size:13px;font-weight:600;text-decoration:none;border-radius:6px;transition:background 0.15s,color 0.15s;}' +
     '.dx-nav-menu li a:hover{background:#f4f7fa;color:#2c5f7e;}' +
@@ -47,7 +47,8 @@
       '.dx-nav-menu li a{padding:12px 14px;font-size:14px;border-radius:8px;}' +
       '.dx-nav-menu li.dx-nav-sep{border-left:none;border-top:1px solid #eef1f4;padding-left:0;padding-top:8px;margin-top:6px;margin-left:0;}' +
       '.dx-nav-toggle{display:block;}' +
-      '.dx-brand-text{font-size:13px;}' +
+      '.dx-brand-img{height:26px;}' +
+      '.dx-brand-suffix{display:none;}' +
     '}';
 
   var styleEl = document.createElement('style');
