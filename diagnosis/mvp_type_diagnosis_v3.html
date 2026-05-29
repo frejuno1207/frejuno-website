@@ -991,6 +991,22 @@ function renderTypeResult() {
     </div>
 
     <div class="cta-section">
+      <div class="cta-headline" style="font-size:15px;">${typeData.code}タイプの暮らし方を<br>もっと詳しく知りたい方へ</div>
+      <div class="cta-sub">合いやすい松山エリア・物件タイプ・見落としやすいポイントを1ページにまとめています。</div>
+      <a class="btn btn-outline" id="typePageBtn" href="/types/${typeData.code}.html?src=result_typepage" target="_blank" rel="noopener">${typeData.code} ${typeData.nick}のページを見る</a>
+    </div>
+
+    <div class="cta-section" style="background:#f4f7fa; border-radius:14px; padding:18px;">
+      <div class="cta-headline" style="font-size:14px; color:#2c5f7e;">SNSで友だちにシェア</div>
+      <div class="cta-sub" style="font-size:12px;">「あなたの松山住まいタイプは？」と一緒に診断を楽しんでもらえます。</div>
+      <div style="display:flex; gap:8px; margin-top:12px; justify-content:center;">
+        <a id="shareXBtn" class="btn" style="background:#000; color:#fff; padding:10px 18px; font-size:13px; width:auto; flex:1;" target="_blank" rel="noopener">𝕏でシェア</a>
+        <a id="shareLineBtn" class="btn" style="background:#06c755; color:#fff; padding:10px 18px; font-size:13px; width:auto; flex:1;" target="_blank" rel="noopener">LINEでシェア</a>
+        <a id="shareFbBtn" class="btn" style="background:#1877f2; color:#fff; padding:10px 18px; font-size:13px; width:auto; flex:1;" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    </div>
+
+    <div class="cta-section">
       <div class="cta-headline" style="font-size:15px;">もっと詳しく希望条件を入れて、<br>松山の物件マッチングを精密化しますか？</div>
       <div class="cta-sub">希望エリア・予算・築年数・駐車場などを別ページで整理します（任意）</div>
       <button class="btn btn-outline" id="deepBtn">希望条件を入力する</button>
@@ -1004,6 +1020,8 @@ function renderTypeResult() {
 
   // Stage 1 pills生成
   renderStage1Pills();
+  // SNSシェアリンク埋め込み
+  setupShareButtons(typeData);
 
   document.getElementById('lineBtn').onclick = () => {
     logEvent('line_clicked', { from: 'type_result', typeCode: state.typeCode });
@@ -1092,6 +1110,36 @@ function submitStage1() {
   // UIを完了状態に
   document.getElementById('s1-send').style.display = 'none';
   document.getElementById('s1-thanks').style.display = 'block';
+}
+
+// ============================================================
+// SNSシェアボタンのリンク組立
+// ============================================================
+function setupShareButtons(typeData) {
+  const code = typeData.code;
+  const url = `https://frejuno.com/types/${code}.html?src=share`;
+  const text = `松山住まいタイプ診断、私のタイプは ${code} ${typeData.nick} でした。\n「${typeData.line}」\n\nあなたのタイプは？ #FREJUNO #松山住まい診断\n`;
+  const enc = encodeURIComponent;
+
+  const xBtn = document.getElementById('shareXBtn');
+  if (xBtn) {
+    xBtn.href = `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`;
+    xBtn.onclick = () => logEvent('share_clicked', { network: 'x', typeCode: code });
+  }
+  const lineBtn = document.getElementById('shareLineBtn');
+  if (lineBtn) {
+    lineBtn.href = `https://line.me/R/share?text=${enc(text + '\n' + url)}`;
+    lineBtn.onclick = () => logEvent('share_clicked', { network: 'line', typeCode: code });
+  }
+  const fbBtn = document.getElementById('shareFbBtn');
+  if (fbBtn) {
+    fbBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`;
+    fbBtn.onclick = () => logEvent('share_clicked', { network: 'facebook', typeCode: code });
+  }
+  const typePageBtn = document.getElementById('typePageBtn');
+  if (typePageBtn) {
+    typePageBtn.onclick = () => logEvent('type_page_clicked', { typeCode: code });
+  }
 }
 
 // ============================================================
@@ -1202,6 +1250,11 @@ function renderTypeResultFromCode(code, opts) {
       <div style="margin-top:10px; font-size:11px; color:#95a4b3; text-align:center;">
         照会コード <b style="color:#2c5f7e; letter-spacing:0.08em;">${(opts && opts.shareCode) || SHARE_CODE}</b>
       </div>
+    </div>
+
+    <div class="cta-section">
+      <div class="cta-headline" style="font-size:15px;">${typeData.code}タイプの暮らし方を<br>もっと詳しく知りたい方へ</div>
+      <a class="btn btn-outline" href="/types/${typeData.code}.html?src=result_replay_typepage" target="_blank" rel="noopener">${typeData.code} ${typeData.nick}のページを見る</a>
     </div>
 
     <div class="cta-section">
