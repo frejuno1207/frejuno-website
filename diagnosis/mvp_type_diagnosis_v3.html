@@ -544,12 +544,15 @@ const DEEP_QUESTIONS = [
 // ============================================================
 // Config
 // ============================================================
-// LINE公式アカウントID（@xxxxxxx形式）。未設定の場合はoaMessage遷移をスキップしてLINEアプリ起動のみ
+// LINE公式アカウントID（@xxxxxxx形式）
 const LINE_OA_ID = '@225zymbg';
-// 友だち追加URL（oaMessageは友だち追加後のみ動作するため、未追加ユーザー向けに併設）
+// 友だち追加URL（LINE Login後に追加できなかったユーザー向け補助導線）
 const LINE_FRIEND_URL = 'https://line.me/R/ti/p/' + encodeURIComponent(LINE_OA_ID);
-// 診断結果ページの永続URL（LINEに送る再表示URL）
+// 診断結果ページの永続URL
 const RESULT_PAGE_URL = location.origin + location.pathname;
+// LINE Login（OAuth）チャネル設定 — ユーザーIDをFREJUNOアカウントに紐付け
+const LINE_LOGIN_CHANNEL_ID = '2010231455';
+const LINE_LOGIN_REDIRECT_URI = 'https://frejuno.com/auth/line.html';
 // Google Apps Script Web App URL（Sheetsへの保存先）。未設定なら保存スキップ。
 // デプロイ手順は FREJUNO_GAS_SETUP.md を参照
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwGskOqXnV9teh0sCywn-IGgk0eOAtwGwVRJ7DkmsUXfIHuk4jAC5UyDfyH5v3DJijcKw/exec';
@@ -940,16 +943,10 @@ function renderTypeResult() {
     ${renderResultInsights(typeData, result)}
 
     <div class="cta-section">
-      <div class="cta-headline">このタイプに近い探し方を<br>LINEで整理しませんか？</div>
-      <div class="cta-sub">結果を保存し、希望エリアや駐車場の有無を入れると、条件整理の精度が上がります（任意）</div>
-      <button class="btn btn-line" id="lineBtn">LINEで結果を保存する</button>
-      <div style="margin-top:8px; font-size:12px; text-align:center;">
-        <a href="${LINE_FRIEND_URL}" target="_blank" rel="noopener" id="lineFriendBtn"
-           style="color:#06c755; text-decoration:underline;">
-          まだ友だち追加していない方はこちら
-        </a>
-      </div>
-      <div style="margin-top:10px; font-size:11px; color:#95a4b3; text-align:center;">
+      <div class="cta-headline">結果をあなたのLINEアカウントに<br>保存しませんか？</div>
+      <div class="cta-sub">タップ1回で連携。LINE側で再度確認できるようになります。診断結果は条件整理にのみ利用します。</div>
+      <button class="btn btn-line" id="lineBtn">LINEアカウントで保存する（タップ1回）</button>
+      <div style="margin-top:8px; font-size:11px; color:#95a4b3; text-align:center;">
         照会コード <b style="color:#2c5f7e; letter-spacing:0.08em;">${SHARE_CODE}</b>
       </div>
     </div>
@@ -1024,8 +1021,8 @@ function renderTypeResult() {
   setupShareButtons(typeData);
 
   document.getElementById('lineBtn').onclick = () => {
-    logEvent('line_clicked', { from: 'type_result', typeCode: state.typeCode });
-    sendResultToLine(state.typeCode);
+    logEvent('line_clicked', { from: 'type_result', typeCode: state.typeCode, method: 'line_login' });
+    startLineLogin('/types/' + state.typeCode + '.html?src=line_login_success');
   };
   document.getElementById('deepBtn').onclick = () => {
     logEvent('conditions_link_clicked', { from: 'type_result', typeCode: state.typeCode });
@@ -1162,6 +1159,32 @@ function buildLineMessage(code, shareCodeOverride) {
   ].join('\n');
 }
 
+// ============================================================
+// LINE Login (OAuth) — 結果をLINEアカウントに紐付け（タップ1回で完了）
+// ============================================================
+function startLineLogin(returnTo) {
+  // CSRF対策のoauthState、OIDC用のnonce
+  const oauthState = 'st_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+  const nonce = 'nc_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+  try {
+    sessionStorage.setItem('line_oauth_state', oauthState);
+    sessionStorage.setItem('line_oauth_nonce', nonce);
+    if (returnTo) sessionStorage.setItem('line_auth_return_to', returnTo);
+  } catch (e) {}
+
+  logEvent('line_login_started', { typeCode: state.typeCode });
+
+  const authUrl = 'https://access.line.me/oauth2/v2.1/authorize'
+    + '?response_type=code'
+    + '&client_id=' + encodeURIComponent(LINE_LOGIN_CHANNEL_ID)
+    + '&redirect_uri=' + encodeURIComponent(LINE_LOGIN_REDIRECT_URI)
+    + '&state=' + encodeURIComponent(oauthState)
+    + '&scope=' + encodeURIComponent('profile openid')
+    + '&nonce=' + encodeURIComponent(nonce);
+
+  window.location.href = authUrl;
+}
+
 function sendResultToLine(code, shareCodeOverride) {
   const msg = buildLineMessage(code, shareCodeOverride);
   if (!LINE_OA_ID || LINE_OA_ID === '@your_line_id') {
@@ -1240,15 +1263,9 @@ function renderTypeResultFromCode(code, opts) {
     </div>
 
     <div class="cta-section">
-      <div class="cta-headline">このタイプに近い探し方を<br>LINEで整理しませんか？</div>
-      <div class="cta-sub">希望エリアや駐車場の有無を入れると、条件整理の精度が上がります（任意）</div>
-      <button class="btn btn-line" id="lineBtn">LINEで結果を保存する</button>
-      <div style="margin-top:8px; font-size:12px; text-align:center;">
-        <a href="${LINE_FRIEND_URL}" target="_blank" rel="noopener" id="lineFriendBtn"
-           style="color:#06c755; text-decoration:underline;">
-          まだ友だち追加していない方はこちら
-        </a>
-      </div>
+      <div class="cta-headline">結果をあなたのLINEアカウントに<br>保存しませんか？</div>
+      <div class="cta-sub">タップ1回で連携。LINE側で再度確認できるようになります（任意）。</div>
+      <button class="btn btn-line" id="lineBtn">LINEアカウントで保存する（タップ1回）</button>
       <div style="margin-top:10px; font-size:11px; color:#95a4b3; text-align:center;">
         照会コード <b style="color:#2c5f7e; letter-spacing:0.08em;">${(opts && opts.shareCode) || SHARE_CODE}</b>
       </div>
@@ -1277,8 +1294,8 @@ function renderTypeResultFromCode(code, opts) {
 
   const effectiveShareCode = (opts && opts.shareCode) || SHARE_CODE;
   document.getElementById('lineBtn').onclick = () => {
-    logEvent('line_clicked', { from: 'type_result_replay', typeCode: code, sc: effectiveShareCode });
-    sendResultToLine(code, effectiveShareCode);
+    logEvent('line_clicked', { from: 'type_result_replay', typeCode: code, sc: effectiveShareCode, method: 'line_login' });
+    startLineLogin('/types/' + code + '.html?src=line_login_replay_success');
   };
   document.getElementById('deepBtn').onclick = () => {
     logEvent('conditions_link_clicked', { from: 'type_result_replay', typeCode: code, sc: effectiveShareCode });
@@ -1582,13 +1599,7 @@ function renderFinal() {
       </div>
     </div>
 
-    <button class="btn btn-line" id="lineBtnFinal">LINEで結果を保存し、探し方を相談する</button>
-    <div style="margin-top:8px; margin-bottom:18px; font-size:12px; text-align:center;">
-      <a href="${LINE_FRIEND_URL}" target="_blank" rel="noopener"
-         style="color:#06c755; text-decoration:underline;">
-        まだ友だち追加していない方はこちら
-      </a>
-    </div>
+    <button class="btn btn-line" id="lineBtnFinal">LINEアカウントで保存する（タップ1回）</button>
 
     <div class="optional-section">
       <h3>もう少し詳しく教えていただけると、より精度高くお返しできます</h3>
@@ -1627,8 +1638,8 @@ function renderFinal() {
   `;
 
   document.getElementById('lineBtnFinal').onclick = () => {
-    logEvent('line_clicked', { from: 'final', typeCode: state.typeCode });
-    sendResultToLine(state.typeCode);
+    logEvent('line_clicked', { from: 'final', typeCode: state.typeCode, method: 'line_login' });
+    startLineLogin('/types/' + state.typeCode + '.html?src=line_login_final_success');
   };
   document.getElementById('saveOptBtn').onclick = () => {
     const loan = document.getElementById('optLoan').value;
