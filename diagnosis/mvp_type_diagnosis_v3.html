@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>FREJUNO 松山住まい診断 16タイプ</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2HZT0DCJBY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2HZT0DCJBY', { send_page_view: true });
+</script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body {
@@ -636,6 +644,16 @@ const state = {
 // ============================================================
 function logEvent(type, data) {
   state.events.push({ t: Date.now(), source: state.source, type, ...data });
+  // GA4にもイベント送信
+  if (typeof gtag === 'function') {
+    try {
+      gtag('event', type, Object.assign({
+        source: state.source,
+        share_code: typeof SHARE_CODE !== 'undefined' ? SHARE_CODE : null,
+        type_code: state.typeCode || null
+      }, data));
+    } catch(e) {}
+  }
 }
 
 function classifyType(lightAnswers) {
