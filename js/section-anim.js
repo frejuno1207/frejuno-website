@@ -1,6 +1,13 @@
 /* Frejuno - セクション演出（強み=横帯 / サービス=ピン留め+部屋）全幅・モバイル有効 */
 (function () {
-  if (!window.gsap || !window.ScrollTrigger) return;
+  if (!window.gsap || !window.ScrollTrigger) {
+    // GSAP未読込時のフォールバック：空白を防ぐため内容を静的表示
+    var fp = document.querySelector('.svc-panel');
+    if (fp) { fp.style.opacity = '1'; fp.style.transform = 'none'; }
+    var fr = document.querySelector('.room-tl'); if (fr) fr.classList.add('on');
+    document.querySelectorAll('.sec-divider span').forEach(function (s) { s.style.transform = 'scaleX(1)'; });
+    return;
+  }
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.config({ ignoreMobileResize: true });
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
