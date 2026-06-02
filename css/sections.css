@@ -53,3 +53,12 @@
   .svc-panel{position:static;opacity:1;margin:20px 0;}
   .room{opacity:0;}
 }
+
+/* 相談の入口（サービス直後のCTA帯） */
+.consult-cta{padding:4.5rem 0;text-align:center;background:#faf7f1;}
+.consult-cta .home-section-lead{max-width:660px;margin:0 auto 1.75rem;color:#5c5247;}
+.consult-cta-actions{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;}
+@media (max-width:760px){
+  .consult-cta{padding:3.25rem 0;}
+  .consult-cta-actions .btn{flex:1 1 100%;max-width:360px;}
+}

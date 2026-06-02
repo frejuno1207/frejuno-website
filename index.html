@@ -30,7 +30,20 @@
     
     <link rel="stylesheet" href="css/style.css?v=20260526-logo-3">
     <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/sections.css?v=20260603">
+    <link rel="stylesheet" href="css/sections.css?v=20260603b">
+    <link rel="stylesheet" href="css/intro.css?v=20260602">
+    <script>
+    (function(){try{
+      var seen=sessionStorage.getItem('frejuno_intro_seen')==='1';
+      var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var preview=location.search.indexOf('preview=1')>-1;
+      if(preview||(!seen&&!reduce)){
+        document.documentElement.classList.add('intro-on');
+        // フェイルセーフ：万一イントロが動かない場合でも画面ロックを解除
+        window.setTimeout(function(){document.documentElement.classList.remove('intro-on');},11000);
+      }
+    }catch(e){}})();
+    </script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -70,6 +83,13 @@
     </script>
 </head>
 <body>
+    <!-- 初回イントロ（間取りロゴが中央から線で現れる／セッション1回） -->
+    <div class="frejuno-intro" role="presentation" aria-hidden="true">
+        <canvas id="frejunoIntroCanvas" width="4096" height="4096"></canvas>
+    </div>
+    <div class="frejuno-bloom" aria-hidden="true"></div>
+    <button class="frejuno-skip" type="button" aria-label="イントロをスキップ">スキップ ›</button>
+
     <!-- ヘッダー -->
     <header class="header">
         <div class="container">
@@ -130,35 +150,6 @@
                 <a href="sell-assessment.html" class="btn btn-primary">売却・査定を相談する</a>
                 <a href="properties.html" class="btn btn-secondary">物件を探す</a>
                 <a href="contact.html?service=buy" class="btn btn-secondary">購入・賃貸を相談する</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- 相談導線 -->
-    <section class="home-consultation">
-        <div class="container">
-            <p class="eyebrow">CONSULTATION</p>
-            <h2 class="section-title">状況に合わせて相談できます</h2>
-            <p class="home-section-lead">売る、買う、貸す、相続した家を整理する。最初の段階で迷っている内容を、そのまま相談できる入口を用意しました。</p>
-            <div class="consultation-grid">
-                <a href="contact.html?service=assessment" class="consultation-card consultation-card-primary">
-                    <span class="consultation-label">SELL</span>
-                    <h3>売却・査定</h3>
-                    <p>相場確認、買取、住み替え、近所に知られにくい売却まで整理します。</p>
-                    <strong>査定を相談する</strong>
-                </a>
-                <a href="contact.html?service=buy" class="consultation-card">
-                    <span class="consultation-label">BUY / RENT</span>
-                    <h3>購入・賃貸</h3>
-                    <p>条件が固まる前でも、エリア、予算、時期、優先順位を一緒に整理します。</p>
-                    <strong>物件探しを相談する</strong>
-                </a>
-                <a href="contact.html?service=inherited" class="consultation-card">
-                    <span class="consultation-label">INHERITANCE</span>
-                    <h3>空き家・相続</h3>
-                    <p>売る、貸す、残す。相続した不動産の選択肢を実務目線で比べます。</p>
-                    <strong>空き家を相談する</strong>
-                </a>
             </div>
         </div>
     </section>
@@ -225,6 +216,20 @@
             </div>
         </div>
         <div class="svc-progress" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </section>
+
+    <!-- 相談の入口（CTA帯） -->
+    <section class="consult-cta">
+        <div class="container">
+            <p class="eyebrow">CONSULTATION</p>
+            <h2 class="section-title">まずは相談から</h2>
+            <p class="home-section-lead">売る、買う、貸す、相続した家を整理する。迷っている段階のままで大丈夫です。状況に近い入口からご相談ください。</p>
+            <div class="consult-cta-actions">
+                <a href="contact.html?service=assessment" class="btn btn-primary">売却・査定を相談する</a>
+                <a href="contact.html?service=buy" class="btn btn-secondary">購入・賃貸を相談する</a>
+                <a href="contact.html?service=inherited" class="btn btn-secondary">空き家・相続を相談する</a>
+            </div>
+        </div>
     </section>
 
     <section class="service-intent-section">
@@ -313,5 +318,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
     <script src="js/gsap-anim.js?v=20260602b"></script>
     <script src="js/section-anim.js?v=20260603b"></script>
+    <script src="js/intro.js?v=20260602"></script>
 </body>
 </html>

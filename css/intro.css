@@ -1,0 +1,63 @@
+/* Frejuno - 初回訪問イントロ（間取りロゴが線で描かれて現れる）。セッション単位で1回。 */
+html.intro-on,
+html.intro-on body { overflow: hidden; }
+
+.frejuno-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  display: none;
+  place-items: center;
+  background: #F3ECE0;
+  overflow: hidden;
+}
+html.intro-on .frejuno-intro { display: grid; }
+
+.frejuno-intro canvas {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+
+.frejuno-bloom {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 99992;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #fff;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  display: none;
+}
+html.intro-on .frejuno-bloom { display: block; }
+
+.frejuno-skip {
+  position: fixed;
+  right: max(20px, env(safe-area-inset-right));
+  top: max(20px, env(safe-area-inset-top));
+  z-index: 99994;
+  display: none;
+  padding: 9px 18px;
+  border: 1px solid rgba(16, 40, 60, .28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .55);
+  color: #10283c;
+  font: 13px/1 "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: .08em;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.frejuno-skip:hover { background: rgba(255, 255, 255, .82); }
+
+/* 動きを減らす設定の利用者にはイントロを出さない */
+@media (prefers-reduced-motion: reduce) {
+  .frejuno-intro,
+  .frejuno-bloom { display: none !important; }
+  html.intro-on,
+  html.intro-on body { overflow: auto !important; }
+}
