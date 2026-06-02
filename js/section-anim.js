@@ -32,6 +32,7 @@
     setActive(0);
     var stl = gsap.timeline({ scrollTrigger: {
       trigger: '.svc-pin', start: 'top top', end: '+=' + (panels.length * 520), pin: true, scrub: 0.5,
+      anticipatePin: 1, invalidateOnRefresh: true,
       onUpdate: function (self) { setActive(Math.min(panels.length - 1, Math.floor(self.progress * panels.length))); }
     }});
     panels.forEach(function (it, i) {
@@ -57,4 +58,8 @@
     }
     if (window.ScrollTrigger) ScrollTrigger.refresh();
   });
+
+  // フォント・画像読込後に位置を再計算（ピン開始位置のズレ防止）
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(function () { ScrollTrigger.refresh(); }); }
+  window.addEventListener('load', function () { setTimeout(function () { ScrollTrigger.refresh(); }, 300); });
 })();

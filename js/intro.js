@@ -1,5 +1,6 @@
-/* Frejuno - 初回イントロ：間取りロゴが中央から線で描かれて現れる（Canvas 2D / 120fps想定）。
-   セッション単位で1回のみ。html.intro-on が付いている時だけ再生（headで先行判定）。 */
+/* Frejuno - 初回イントロ：間取りロゴが中央から線で描かれて現れる（Canvas 2D）。
+   セッション単位で1回のみ。html.intro-on が付いている時だけ再生（headで先行判定）。
+   モバイルでのクラッシュ防止のため、オフスクリーン合成を画面相当の解像度に縮小して描画。 */
 (function () {
   if (!document.documentElement.classList.contains("intro-on")) return;
 
@@ -17,8 +18,9 @@
   var previewMode = new URLSearchParams(window.location.search).get("preview") === "1";
   var fx = new URLSearchParams(window.location.search).get("fx");
   var start = 0, rafId = 0, redirectTimer = 0;
-  var invertedCanvas, maskCanvas = null, maskCtx = null, pen = null;
+  var srcSmall = null, maskCanvas = null, maskCtx = null, pen = null;
   var dpr = 1, viewW = 0, viewH = 0, designScale = 1, designX = 0, designY = 0;
+  var isSmall = false, Q = 1;
 
   source.src = "images/frejuno-floorplan-vertical-4k.png";
 
@@ -27,9 +29,32 @@
   function phase(now, a, b) { return smooth((now - a) / (b - a)); }
   function lerp(a, b, t) { return a + (b - a) * t; }
 
+  function buildQuality() {
+    isSmall = Math.min(window.innerWidth, window.innerHeight) <= 820;
+    var maskMax = isSmall ? 1280 : 2400;       // オフスクリーンの最大辺（メモリ削減）
+    Q = Math.min(1, maskMax / W);
+  }
+
+  function buildSrcSmall() {
+    srcSmall = document.createElement("canvas");
+    srcSmall.width = Math.round(W * Q);
+    srcSmall.height = Math.round(H * Q);
+    var s = srcSmall.getContext("2d");
+    s.imageSmoothingEnabled = true; s.imageSmoothingQuality = "high";
+    s.drawImage(source, 0, 0, srcSmall.width, srcSmall.height);
+  }
+
+  function buildMask() {
+    maskCanvas = document.createElement("canvas");
+    maskCanvas.width = Math.round(W * Q);
+    maskCanvas.height = Math.round(H * Q);
+    maskCtx = maskCanvas.getContext("2d");
+    maskCtx.imageSmoothingEnabled = true; maskCtx.imageSmoothingQuality = "high";
+  }
+
   function resizeCanvas() {
     viewW = window.innerWidth; viewH = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    dpr = Math.min(window.devicePixelRatio || 1, isSmall ? 2 : 2.5);
     canvas.width = Math.round(viewW * dpr); canvas.height = Math.round(viewH * dpr);
     canvas.style.width = viewW + "px"; canvas.style.height = viewH + "px";
     designScale = Math.min(viewW / W, viewH / H);
@@ -50,16 +75,19 @@
   function rect(x, y, w, h) { (pen || ctx).rect(x, y, w, h); }
   function poly(points) { var c = pen || ctx; c.moveTo(points[0][0], points[0][1]); for (var i = 1; i < points.length; i += 1) c.lineTo(points[i][0], points[i][1]); c.closePath(); }
 
+  // オフスクリーンは Q 倍の縮小解像度。パスは4096座標のまま、scale(Q)で描画。
   function drawMasked(alpha, makePath) {
     if (alpha <= 0) return;
-    if (!maskCanvas) { maskCanvas = document.createElement("canvas"); maskCanvas.width = W; maskCanvas.height = H; maskCtx = maskCanvas.getContext("2d"); }
+    var mw = maskCanvas.width, mh = maskCanvas.height;
     maskCtx.setTransform(1, 0, 0, 1, 0, 0);
-    maskCtx.clearRect(0, 0, W, H);
+    maskCtx.clearRect(0, 0, mw, mh);
     maskCtx.globalCompositeOperation = "source-over";
+    maskCtx.setTransform(Q, 0, 0, Q, 0, 0);
     maskCtx.fillStyle = "#fff";
     pen = maskCtx; maskCtx.beginPath(); makePath(); maskCtx.fill(); pen = null;
+    maskCtx.setTransform(1, 0, 0, 1, 0, 0);
     maskCtx.globalCompositeOperation = "source-in";
-    maskCtx.drawImage(invertedCanvas, 0, 0, W, H);
+    maskCtx.drawImage(srcSmall, 0, 0);
     maskCtx.globalCompositeOperation = "source-over";
     ctx.save(); ctx.globalAlpha = clamp(alpha); ctx.drawImage(maskCanvas, 0, 0, W, H); ctx.restore();
   }
@@ -172,7 +200,7 @@
     drawMasked(seal * 0.82, function () { rect(630, 2640, 2900, 280); });
     if (now >= 5920) {
       ctx.globalAlpha = clamp((now - 5920) / 360);
-      ctx.drawImage(invertedCanvas, 0, 0, W, H);
+      ctx.drawImage(srcSmall, 0, 0, W, H);
       ctx.globalAlpha = 1;
     }
   }
@@ -209,25 +237,48 @@
 
   function play() { cancelAnimationFrame(rafId); resetState(); start = 0; rafId = requestAnimationFrame(drawFrame); }
 
+  function releaseMemory() {
+    // 大きなオフスクリーンを解放し、モバイルのメモリを戻す
+    try {
+      if (maskCanvas) { maskCanvas.width = maskCanvas.height = 0; }
+      if (srcSmall) { srcSmall.width = srcSmall.height = 0; }
+      canvas.width = canvas.height = 0;
+    } catch (e) {}
+    maskCanvas = maskCtx = srcSmall = null;
+  }
+
   function finishIntro() {
     window.clearTimeout(redirectTimer);
+    cancelAnimationFrame(rafId);
     intro.style.transition = "opacity .6s ease"; intro.style.opacity = "0";
     if (skipBtn) skipBtn.style.display = "none";
     window.setTimeout(function () {
       intro.style.display = "none"; bloom.style.display = "none";
       document.documentElement.classList.remove("intro-on");
+      releaseMemory();
       if (window.ScrollTrigger) { try { window.ScrollTrigger.refresh(); } catch (e) {} }
     }, 650);
     if (!previewMode) { try { sessionStorage.setItem("frejuno_intro_seen", "1"); } catch (e) {} }
   }
 
-  function startIntro() { invertedCanvas = source; resizeCanvas(); if (skipBtn) skipBtn.style.display = "block"; play(); }
+  function startIntro() {
+    buildQuality();
+    buildSrcSmall();
+    buildMask();
+    resizeCanvas();
+    if (skipBtn) skipBtn.style.display = "block";
+    play();
+  }
 
   if (source.complete && source.naturalWidth) { startIntro(); }
-  else { source.addEventListener("load", startIntro); source.addEventListener("error", function () { document.documentElement.classList.remove("intro-on"); intro.style.display = "none"; if (bloom) bloom.style.display = "none"; }); }
+  else {
+    source.addEventListener("load", startIntro);
+    source.addEventListener("error", function () { document.documentElement.classList.remove("intro-on"); intro.style.display = "none"; if (bloom) bloom.style.display = "none"; });
+  }
 
-  if (skipBtn) skipBtn.addEventListener("click", function () { cancelAnimationFrame(rafId); finishIntro(); });
-  window.addEventListener("resize", function () { if (!document.documentElement.classList.contains("intro-on")) return; resizeCanvas(); if (start) play(); });
+  if (skipBtn) skipBtn.addEventListener("click", function () { finishIntro(); });
+  // モバイルのアドレスバー開閉などの resize では再生をリスタートせず、サイズだけ追従
+  window.addEventListener("resize", function () { if (!document.documentElement.classList.contains("intro-on") || !srcSmall) return; resizeCanvas(); });
 
-  window.frejunoHomeIntro = { replay: function () { document.documentElement.classList.add("intro-on"); if (skipBtn) skipBtn.style.display = "block"; resizeCanvas(); play(); } };
+  window.frejunoHomeIntro = { replay: function () { document.documentElement.classList.add("intro-on"); if (!srcSmall) { startIntro(); return; } if (skipBtn) skipBtn.style.display = "block"; resizeCanvas(); play(); } };
 })();
