@@ -7,7 +7,6 @@
     <meta name="description" content="株式会社Frejunoへのお問い合わせ。松山市周辺の不動産売買、賃貸、買取査定、リフォーム相談、住み替え相談はこちら。">
     <link rel="canonical" href="https://frejuno.com/contact.html">
     <meta name="robots" content="index, follow">
-    <meta name="keywords" content="Frejuno, フレジュノ, 株式会社Frejuno, 松山市 不動産, 愛媛県 不動産, 松山 賃貸, 松山 売買, 松山 買取査定, 松山 リフォーム相談">
     <meta property="og:type" content="website">
     <meta property="og:title" content="お問い合わせ｜株式会社Frejuno">
     <meta property="og:description" content="株式会社Frejunoへのお問い合わせ。松山市周辺の不動産売買、賃貸、買取査定、リフォーム相談、住み替え相談はこちら。">
@@ -35,7 +34,7 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <h1 class="logo"><a href="index.html"><img src="images/logo.png?v=20260528-logo-1" alt="Frejuno"></a></h1>
+                <div class="logo"><a href="index.html"><img src="images/logo.png?v=20260528-logo-1" alt="Frejuno"></a></div>
                 
                 <nav class="nav" aria-label="メインメニュー">
                     <ul>
@@ -83,7 +82,7 @@
     <main>
         <section class="contact-hero" style="background-color: var(--color-gray); padding: 3rem 0; text-align: center;">
             <div class="container">
-                <h2 class="section-title">お問い合わせ</h2>
+                <h1 class="section-title">お問い合わせ</h1>
                 <p>お気軽にご相談ください</p>
             </div>
         </section>
@@ -111,6 +110,10 @@
                     <p style="margin-top: 0.5rem; color: #666;">受付時間：10:00〜18:00（水曜定休）</p>
                 </div>
 
+                <div id="contact-success" role="status" style="display:none; background:#f1e7da; border:1px solid rgba(164,139,111,0.45); padding:2rem; border-radius:10px; text-align:center; margin-bottom:2rem;">
+                    <h3 style="color:var(--color-primary); margin-bottom:0.75rem;">送信が完了しました</h3>
+                    <p style="color:#555;">お問い合わせありがとうございます。担当者より折り返しご連絡いたします。<br>（水曜定休・営業時間外のお問い合わせは翌営業日以降の対応となります）</p>
+                </div>
                 <form id="contact-form" style="background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
                     <div style="margin-bottom: 1.5rem;">
                         <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">お名前 <span style="color: red;">*</span></label>
@@ -285,6 +288,9 @@
             }
         })();
 
+        // ▼ Formspree設定：https://formspree.io でフォームを作成後、下のURLを差し替えてください
+        window.FREJUNO_FORM_ENDPOINT = ''; // 例: 'https://formspree.io/f/xxxxxxxx'
+
         document.getElementById('contact-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -319,16 +325,39 @@ ${subject}
 【お問い合わせ内容】
 ${message}`;
             
-            // mailtoリンクを作成
-            const mailtoLink = `mailto:office@frejuno.com?subject=${encodeURIComponent('【ウェブサイトより】' + subject)}&body=${encodeURIComponent(body)}`;
-            
-            // メーラーを開く
-            window.location.href = mailtoLink;
-            
-            // 確認メッセージ
-            setTimeout(() => {
-                alert('メールソフトが起動します。\n\n送信ボタンを押してお問い合わせを完了してください。\n\nメールソフトが起動しない場合は、直接 office@frejuno.com までご連絡ください。');
-            }, 500);
+            // 送信処理（Formspree優先・未設定時はメーラー起動にフォールバック）
+            const form = document.getElementById('contact-form');
+
+            function fallbackMailto() {
+                const mailtoLink = `mailto:office@frejuno.com?subject=${encodeURIComponent('【ウェブサイトより】' + subject)}&body=${encodeURIComponent(body)}`;
+                window.location.href = mailtoLink;
+                setTimeout(() => {
+                    alert('メールソフトが起動します。\n\n送信ボタンを押してお問い合わせを完了してください。\n\nメールソフトが起動しない場合は、直接 office@frejuno.com までご連絡ください。');
+                }, 500);
+            }
+
+            if (!window.FREJUNO_FORM_ENDPOINT) {
+                fallbackMailto();
+                return;
+            }
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '送信中...'; }
+
+            fetch(window.FREJUNO_FORM_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: new FormData(form)
+            }).then((res) => {
+                if (!res.ok) { fallbackMailto(); return; }
+                const ok = document.getElementById('contact-success');
+                form.style.display = 'none';
+                if (ok) { ok.style.display = 'block'; ok.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+            }).catch(() => {
+                fallbackMailto();
+            }).finally(() => {
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '送信する'; }
+            });
         });
     </script>
 </body>

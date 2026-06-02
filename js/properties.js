@@ -162,7 +162,9 @@ function applyFilters() {
         if (typeFilter && property.type !== typeFilter) return false;
 
         if (priceFilter) {
-            const [min, max] = priceFilter.split('-').map(v => parseInt(v) || Infinity);
+            const [minRaw, maxRaw] = priceFilter.split('-');
+            const min = minRaw ? parseInt(minRaw, 10) : 0;
+            const max = maxRaw ? parseInt(maxRaw, 10) : Infinity;
             if (property.price < min || property.price > max) return false;
         }
 
@@ -217,16 +219,15 @@ function renderHomeProperties(containerId = 'recommended-properties') {
 
 window.addEventListener('load', () => {
     const typeFromURL = getPropertyTypeFromURL();
-    if (typeFromURL) {
-        const filterType = document.getElementById('filter-type');
-        if (filterType) {
-            if (typeFromURL === 'sale') {
-                // 売買物件を表示
-            }
-        }
+    if (typeFromURL === 'rent') {
+        currentProperties = activeProperties.filter(p => p.type.startsWith('賃貸'));
+    } else if (typeFromURL === 'sale') {
+        currentProperties = activeProperties.filter(p => p.type.startsWith('売'));
+    } else {
+        currentProperties = [...activeProperties];
     }
 
-    displayProperties();
+    displayProperties(currentProperties);
     displaySoldAchievements();
 });
 

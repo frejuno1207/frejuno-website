@@ -173,23 +173,13 @@ function displayNearbyPlaces(places, type) {
         placeElement.innerHTML = `
             <div class="place-category">${categoryName}</div>
             <div class="place-name">${place.name}</div>
-            <div class="place-distance">徒歩約${calculateWalkTime(place.geometry.location)}分</div>
             ${place.rating ? `<div class="place-rating">★ ${place.rating}</div>` : ''}
         `;
         container.appendChild(placeElement);
     });
 }
 
-/**
- * 距離から徒歩時間を計算（簡易版）
- * @param {Object} location - google.maps.LatLng
- * @returns {number} 徒歩時間（分）
- */
-function calculateWalkTime(location) {
-    // 簡易計算：80m/分で計算
-    // 実際は現在地との距離を計算する必要あり
-    return Math.ceil(Math.random() * 10 + 1); // 仮実装
-}
+// NOTE: 徒歩時間表示はランダム値の仮実装だったため撤去。
 
 // ページ読み込み時に自動実行
 window.addEventListener('load', () => {
