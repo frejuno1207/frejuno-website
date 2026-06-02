@@ -54,6 +54,12 @@ html.intro-on .frejuno-bloom { display: block; }
 }
 .frejuno-skip:hover { background: rgba(255, 255, 255, .82); }
 
+/* イントロ再生中はヒーローの登場アニメを一時停止（イントロ終了後に見せる） */
+html.intro-on .hero-content,
+html.intro-on .hero-title,
+html.intro-on .hero-subtitle,
+html.intro-on .hero-buttons { animation-play-state: paused !important; }
+
 /* 動きを減らす設定の利用者にはイントロを出さない */
 @media (prefers-reduced-motion: reduce) {
   .frejuno-intro,

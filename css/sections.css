@@ -62,3 +62,15 @@
   .consult-cta{padding:3.25rem 0;}
   .consult-cta-actions .btn{flex:1 1 100%;max-width:360px;}
 }
+
+/* 明るい背景でも読みやすいサンドゴールド・ボタン（エリア／CTA帯） */
+.btn-sand-gold{
+  background:#ffffff !important;
+  color:#5c4632 !important;
+  border:1.5px solid #c9a87c !important;
+}
+.btn-sand-gold:hover{
+  background:#c9a87c !important;
+  color:#ffffff !important;
+  border-color:#c9a87c !important;
+}
