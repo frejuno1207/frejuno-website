@@ -31,6 +31,7 @@
     
     <link rel="stylesheet" href="css/style.css?v=20260526-logo-3">
     <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/sections.css?v=20260603">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -151,73 +152,68 @@
         </div>
     </section>
 
-    <!-- 強み -->
-    <section class="features">
+    <!-- 強み：エンドレス横帯 -->
+    <section class="features" id="strengths">
         <div class="container">
+            <div class="sec-divider"><span></span></div>
             <h2 class="section-title">Frejunoの強み</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📅</div>
-                    <h3>土日も営業</h3>
-                    <p>お客様のご都合に合わせて、土日もご対応いたします</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>スピード査定</h3>
-                    <p>迅速かつ正確な査定で、スムーズな取引をサポート</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌍</div>
-                    <h3>英語対応可</h3>
-                    <p>English available. 外国人のお客様も安心してご相談ください</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">👥</div>
-                    <h3>女性スタッフ対応</h3>
-                    <p>女性スタッフによる丁寧なご案内も可能です</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🚗</div>
-                    <h3>送迎サービス</h3>
-                    <p>駅からの送迎サービスで、物件見学もスムーズ</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏠</div>
-                    <h3>買取・リフォーム</h3>
-                    <p>買取からリフォーム相談まで、ワンストップで対応</p>
+        </div>
+        <div class="strengths-mq">
+            <div class="mq-row" id="mqrow">
+                <div class="mq-track" id="mqtrack">
+                    <span class="mq-item"><span class="txt">土日も営業</span><span class="dot"></span></span>
+                    <span class="mq-item"><span class="txt">スピード査定</span><span class="dot"></span></span>
+                    <span class="mq-item"><span class="txt">英語対応可</span><span class="dot"></span></span>
+                    <span class="mq-item"><span class="txt">女性スタッフ対応</span><span class="dot"></span></span>
+                    <span class="mq-item"><span class="txt">送迎サービス</span><span class="dot"></span></span>
+                    <span class="mq-item"><span class="txt">買取・リフォーム</span><span class="dot"></span></span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- サービス -->
-    <section class="services">
-        <div class="container">
-            <p class="eyebrow">SERVICE</p>
-            <h2 class="section-title">Frejunoでできること</h2>
-            <div class="services-grid">
-                <div class="service-card">
+    <!-- サービス：ピン留め＋ロゴの部屋が灯る -->
+    <section class="services svc-pin" id="services" aria-label="Frejunoでできること">
+        <div class="svc-stage">
+            <div class="svc-logo">
+                <img src="images/frejuno-floorplan-icon.png" alt="FREJUNO 間取りロゴ">
+                <span class="room room-tl"></span>
+                <span class="room room-tr"></span>
+                <span class="room room-bl"></span>
+                <span class="room room-br"></span>
+            </div>
+            <div class="svc-texts">
+                <div class="svc-panel">
+                    <div class="num">01 SERVICE</div>
                     <h3>賃貸物件</h3>
+                    <div class="s-line"></div>
                     <p>アパート・マンション・戸建の賃貸条件を、暮らし方に合わせて整理します。</p>
                     <a href="properties.html?type=rent" class="btn-link">物件を見る →</a>
                 </div>
-                <div class="service-card">
+                <div class="svc-panel">
+                    <div class="num">02 SERVICE</div>
                     <h3>売買物件</h3>
+                    <div class="s-line"></div>
                     <p>中古マンション、戸建、土地の購入判断と売買手続きをサポートします。</p>
                     <a href="properties.html?type=sale" class="btn-link">物件を見る →</a>
                 </div>
-                <div class="service-card">
+                <div class="svc-panel">
+                    <div class="num">03 SERVICE</div>
                     <h3>買取・査定</h3>
+                    <div class="s-line"></div>
                     <p>売るか未定の段階でも、相場、時期、仲介と買取の違いを確認できます。</p>
                     <a href="contact.html?service=assessment" class="btn-link">査定依頼 →</a>
                 </div>
-                <div class="service-card">
+                <div class="svc-panel">
+                    <div class="num">04 SERVICE</div>
                     <h3>リフォーム相談</h3>
+                    <div class="s-line"></div>
                     <p>購入前後の修繕、活用前の整備、住み替えに伴う改修も相談できます。</p>
                     <a href="contact.html?service=reform" class="btn-link">相談する →</a>
                 </div>
             </div>
         </div>
+        <div class="svc-progress" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     </section>
 
     <section class="service-intent-section">
@@ -300,5 +296,11 @@
     <script src="js/maps.js"></script>
     <script src="js/hero-slider.js"></script>
     <script src="js/main.js"></script>
+
+    <!-- GSAP（スクロール演出） -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
+    <script src="js/gsap-anim.js?v=20260602"></script>
+    <script src="js/section-anim.js?v=20260603"></script>
 </body>
 </html>

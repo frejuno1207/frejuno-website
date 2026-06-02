@@ -1,0 +1,55 @@
+/* Frejuno - セクション演出（強み=横帯 / サービス=ピン留め+ロゴの部屋） */
+
+/* 区切り線（任意） */
+.sec-divider{display:flex;justify-content:center;margin-bottom:1.5rem;}
+.sec-divider span{display:block;width:84px;height:2px;background:var(--color-accent);transform-origin:left center;}
+
+/* === 強み：エンドレス横帯 === */
+.strengths-mq{padding:1.2rem 0 0;}
+.mq-row{display:flex;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
+.mq-track{display:flex;flex:0 0 auto;white-space:nowrap;will-change:transform;}
+.mq-item{display:inline-flex;align-items:center;font-size:clamp(16px,2.2vw,26px);
+  font-weight:300;color:var(--color-secondary);letter-spacing:.06em;}
+.mq-item .txt{padding:0 30px;}
+.mq-item .dot{width:7px;height:7px;border-radius:50%;background:var(--color-accent);}
+
+/* === サービス：ピン留め＋ロゴの部屋が灯る === */
+.svc-pin{position:relative;height:100vh;overflow:hidden;}
+.svc-pin .svc-stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5vw;padding:0 6vw;}
+.svc-logo{position:relative;flex:0 0 auto;width:min(340px,72vw);aspect-ratio:1;}
+.svc-logo img{width:100%;height:100%;object-fit:contain;display:block;position:relative;z-index:2;}
+.room{position:absolute;width:40%;height:38%;border-radius:50%;opacity:0;transform:scale(.86);
+  transition:opacity .6s ease,transform .6s ease;pointer-events:none;z-index:1;filter:blur(12px);
+  background:radial-gradient(circle, rgba(201,168,124,.6), rgba(201,168,124,0) 70%);}
+.room.on{opacity:1;transform:scale(1);}
+.room-tl{left:3%;top:11%;}  .room-tr{right:3%;top:11%;}
+.room-bl{left:3%;bottom:14%;} .room-br{right:3%;bottom:14%;}
+.svc-texts{position:relative;flex:0 0 auto;width:min(440px,86vw);height:300px;}
+.svc-panel{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;}
+.svc-panel .num{font-size:13px;letter-spacing:.3em;color:var(--color-accent);}
+.svc-panel h3{font-weight:400;font-size:clamp(26px,5vw,46px);margin:8px 0 14px;letter-spacing:.05em;color:var(--color-text);}
+.svc-panel .s-line{width:90px;height:2px;background:var(--color-secondary);margin:0 0 18px;transform-origin:left center;}
+.svc-panel p{color:#666;max-width:440px;}
+.svc-panel .btn-link{margin-top:20px;}
+.svc-progress{position:absolute;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:4;}
+.svc-progress i{width:8px;height:8px;border-radius:50%;background:rgba(27,39,64,.2);transition:all .3s;}
+.svc-progress i.on{background:var(--color-accent);transform:scale(1.4);}
+
+@media (max-width:760px){
+  .svc-pin .svc-stage{flex-direction:column;gap:10px;padding:12vh 8vw 0;justify-content:flex-start;}
+  .svc-logo{width:min(260px,62vw);}
+  .svc-texts{width:90vw;height:240px;text-align:center;}
+  .svc-panel{align-items:center;}
+  .svc-panel .s-line{margin:0 auto 16px;transform-origin:center;}
+  .svc-progress{right:12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .svc-pin{height:auto;padding:4rem 0;}
+  .svc-pin .svc-stage{position:static;flex-wrap:wrap;}
+  .svc-texts{height:auto;}
+  .svc-panel{position:static;opacity:1;margin:20px 0;}
+  .room{opacity:0;}
+}
