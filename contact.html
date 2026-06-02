@@ -114,7 +114,7 @@
                     <h3 style="color:var(--color-primary); margin-bottom:0.75rem;">送信が完了しました</h3>
                     <p style="color:#555;">お問い合わせありがとうございます。担当者より折り返しご連絡いたします。<br>（水曜定休・営業時間外のお問い合わせは翌営業日以降の対応となります）</p>
                 </div>
-                <form id="contact-form" style="background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                <form id="contact-form" method="POST" style="background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
                     <div style="margin-bottom: 1.5rem;">
                         <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">お名前 <span style="color: red;">*</span></label>
                         <input type="text" id="name" name="name" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
@@ -288,8 +288,8 @@
             }
         })();
 
-        // ▼ Formspree設定：https://formspree.io でフォームを作成後、下のURLを差し替えてください
-        window.FREJUNO_FORM_ENDPOINT = ''; // 例: 'https://formspree.io/f/xxxxxxxx'
+        // ▼ Formspree設定
+        window.FREJUNO_FORM_ENDPOINT = 'https://formspree.io/p/3015044609211367398/f/contactForm';
 
         document.getElementById('contact-form').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -336,7 +336,9 @@ ${message}`;
                 }, 500);
             }
 
-            if (!window.FREJUNO_FORM_ENDPOINT) {
+            // Formspree未設定時は従来通りメーラー起動
+            const endpoint = (window.FREJUNO_FORM_ENDPOINT || '').trim();
+            if (!endpoint) {
                 fallbackMailto();
                 return;
             }
@@ -344,10 +346,15 @@ ${message}`;
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '送信中...'; }
 
-            fetch(window.FREJUNO_FORM_ENDPOINT, {
+            const formData = new FormData(form);
+            formData.set('_subject', '【FREJUNO HP】' + subject);
+            formData.set('formatted_body', body);
+            formData.set('source_page', window.location.href);
+
+            fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Accept': 'application/json' },
-                body: new FormData(form)
+                body: formData
             }).then((res) => {
                 if (!res.ok) { fallbackMailto(); return; }
                 const ok = document.getElementById('contact-success');
