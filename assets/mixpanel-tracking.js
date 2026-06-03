@@ -4,7 +4,7 @@
  */
 (function() {
   var MIXPANEL_TOKEN = 'accab28a95ca3c08d8fe02929ca731bd';
-  var VERSION = '20260603-2';
+  var VERSION = '20260603-3';
   var DIAGNOSIS_VERSION = 'mvp_type_diagnosis_v3_7q';
 
   (function(f,b){
@@ -125,6 +125,7 @@
   };
 
   window.mixpanel.init(MIXPANEL_TOKEN, {
+    api_host: 'https://api-eu.mixpanel.com',
     debug: /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname),
     persistence: 'localStorage',
     track_pageview: false
