@@ -1698,3 +1698,30 @@ section {
         max-width: 100%;
     }
 }
+
+/* ===== Cookie同意バナー：ボタン視認性・コンパクト化・固定CTAとの重なり回避 ===== */
+.cookie-consent .btn { padding: 0.7rem 1.4rem; box-shadow: none; letter-spacing: 0.04em; }
+.cookie-consent .btn-primary { background: var(--color-primary); color: #fff; }
+.cookie-consent .btn-primary:hover { background: var(--color-secondary); color: #fff; }
+.cookie-consent .btn-secondary { background: #fff; color: var(--color-secondary); border: 1px solid rgba(164, 139, 111, 0.5); }
+.cookie-consent .btn-secondary:hover { background: #F8F6F3; color: var(--color-secondary); }
+
+/* バナー表示中は固定CTAを持ち上げて重ならないように */
+body.cookie-open .fixed-assessment-cta { bottom: 6.5rem; }
+
+@media (max-width: 768px) {
+  .cookie-consent {
+    left: 0.5rem; right: 0.5rem; bottom: 0.5rem;
+    padding: 0.7rem 0.85rem; gap: 0.5rem; border-radius: 10px;
+  }
+  .cookie-consent strong { font-size: 0.84rem; }
+  .cookie-consent p {
+    font-size: 0.74rem; line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .cookie-consent-actions { gap: 0.4rem; flex-wrap: nowrap; }
+  .cookie-consent-actions .btn { flex: 1 1 auto; padding: 0.6rem 0.5rem; font-size: 0.8rem; text-align: center; }
+  .cookie-consent-actions a { font-size: 0.78rem; white-space: nowrap; align-self: center; }
+  /* コンパクトなバナーの分だけ固定CTAを上げる */
+  body.cookie-open .fixed-assessment-cta { bottom: 128px; }
+}

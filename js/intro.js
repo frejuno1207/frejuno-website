@@ -13,8 +13,8 @@
   var ctx = canvas.getContext("2d");
   var source = new Image();
   var W = 4096, H = 4096;
-  var duration = 7600;
-  var playbackSpeed = 1.12;
+  var duration = 6300;        // ロゴが描き上がるまで（白フラッシュの終盤は廃止）
+  var playbackSpeed = 2.5;     // 短縮：約2.5秒で描画完了→本文へ
   var previewMode = new URLSearchParams(window.location.search).get("preview") === "1";
   var fx = new URLSearchParams(window.location.search).get("fx");
   var start = 0, rafId = 0, redirectTimer = 0;
@@ -209,20 +209,12 @@
     if (!start) start = time;
     var now = (time - start) * playbackSpeed;
     beginFrame();
-    setTransition(now);
     drawGrid(now);
-    var logoFade = 1 - phase(now, 5850, 6640);
-    ctx.save(); ctx.globalAlpha = logoFade;
     drawBuild(now);
     if (fx === "a") drawGoldSweep(now);
-    ctx.restore();
-    drawBeamZoom(now);
     if (now >= duration) {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, viewW, viewH);
-      bloom.style.display = "block"; bloom.style.opacity = "1";
-      bloom.style.transform = "translate(-50%, -50%) scale(270)";
-      if (!redirectTimer) redirectTimer = window.setTimeout(finishIntro, 360);
+      // 白フラッシュは出さず、オーバーレイをクロスフェードして本文へ
+      if (!redirectTimer) redirectTimer = window.setTimeout(finishIntro, 120);
     } else {
       rafId = requestAnimationFrame(drawFrame);
     }
@@ -250,14 +242,15 @@
   function finishIntro() {
     window.clearTimeout(redirectTimer);
     cancelAnimationFrame(rafId);
-    intro.style.transition = "opacity .6s ease"; intro.style.opacity = "0";
+    // 先に intro-on を外してヒーローの登場アニメを開始→オーバーレイをフェード（クロスディゾルブ）
+    document.documentElement.classList.remove("intro-on");
+    intro.style.transition = "opacity .55s ease"; intro.style.opacity = "0";
     if (skipBtn) skipBtn.style.display = "none";
     window.setTimeout(function () {
-      intro.style.display = "none"; bloom.style.display = "none";
-      document.documentElement.classList.remove("intro-on");
+      intro.style.display = "none"; if (bloom) bloom.style.display = "none";
       releaseMemory();
       if (window.ScrollTrigger) { try { window.ScrollTrigger.refresh(); } catch (e) {} }
-    }, 650);
+    }, 600);
     if (!previewMode) { try { sessionStorage.setItem("frejuno_intro_seen", "1"); } catch (e) {} }
   }
 

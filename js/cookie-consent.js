@@ -70,6 +70,7 @@
         setConsent('accepted');
         const banner = document.getElementById('cookie-consent');
         if (banner) banner.remove();
+        document.body.classList.remove('cookie-open');
         enableMapEmbeds();
         loadGoogleMapsApi();
     }
@@ -78,6 +79,7 @@
         setConsent('declined');
         const banner = document.getElementById('cookie-consent');
         if (banner) banner.remove();
+        document.body.classList.remove('cookie-open');
     }
 
     function createInlineMapPlaceholder(target) {
@@ -139,6 +141,7 @@
         banner.querySelector('[data-cookie-accept]').addEventListener('click', acceptConsent);
         banner.querySelector('[data-cookie-decline]').addEventListener('click', declineConsent);
         document.body.appendChild(banner);
+        document.body.classList.add('cookie-open');
     }
 
     window.FrejunoConsent = {
