@@ -4,7 +4,7 @@
  */
 (function() {
   var MIXPANEL_TOKEN = 'accab28a95ca3c08d8fe02929ca731bd';
-  var VERSION = '20260603-1';
+  var VERSION = '20260603-2';
   var DIAGNOSIS_VERSION = 'mvp_type_diagnosis_v3_7q';
 
   (function(f,b){
