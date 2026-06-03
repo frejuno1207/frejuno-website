@@ -3,7 +3,7 @@
  * Quick Start scope: diagnosis funnel only.
  */
 (function() {
-  var MIXPANEL_TOKEN = 'b8bd3d34632b5ca12b2ca3ad916896cb';
+  var MIXPANEL_TOKEN = 'accab28a95ca3c08d8fe02929ca731bd';
   var VERSION = '20260603-1';
   var DIAGNOSIS_VERSION = 'mvp_type_diagnosis_v3_7q';
 
