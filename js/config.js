@@ -32,4 +32,5 @@ const CONFIG = {
     }
 };
 
-// APIキーはapi-key.jsで設定される
+// APIキーは公開クライアント用のみ。発行時は必ず frejuno.com などのHTTPリファラ制限を設定する。
+// サーバー用キーや制限なしのGoogle Mapsキーはコミットしない。

@@ -93,7 +93,8 @@
     returnTo = sessionStorage.getItem('line_auth_return_to') || returnTo;
   } catch (e) {}
 
-  // 4. GASにcode送信 → userId取得
+  // 4. GASにcode送信 -> userId取得
+  // Channel SecretはGAS側などサーバー管理に限定し、この静的HTMLには置かない。
   const payload = {
     eventType: 'line_oauth_exchange',
     page: 'auth_callback',
