@@ -43,24 +43,9 @@ const properties = [
         athomeUrl: 'https://www.athome.co.jp/kodate/6989126396/',
         lat: 33.8199,
         lng: 132.8134,
-        image: 'images/property-takako-exterior-1.jpg',
+        image: 'images/ogp-brand.png',
         images: [
-            'images/property-takako-exterior-1.jpg',
-            'images/property-takako-exterior-2.jpg',
-            'images/property-takako-exterior-3.jpg',
-            'images/property-takako-exterior-4.jpg',
-            'images/property-takako-living-1.jpg',
-            'images/property-takako-living-2.jpg',
-            'images/property-takako-kitchen.jpg',
-            'images/property-takako-bath.jpg',
-            'images/property-takako-entrance.jpg',
-            'images/property-takako-washroom.jpg',
-            'images/property-takako-toilet1f.jpg',
-            'images/property-takako-toilet2f.jpg',
-            'images/property-takako-bedroom.jpg',
-            'images/property-takako-storage.jpg',
-            'images/property-takako-stairs.jpg',
-            'images/property-takako-floorplan.jpg'
+            'images/ogp-brand.png'
         ]
     }
 ];
