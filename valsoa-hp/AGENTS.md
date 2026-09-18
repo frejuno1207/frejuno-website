@@ -1,0 +1,39 @@
+# このリポジトリを触るときの約束
+
+施主・読み手・禁止事項は `README.md` に書いてある。先に読むこと。
+
+## 絶対に破らないこと
+
+1. **画像を使わない。** `<img>`・背景画像・SVGアイコン素材・絵文字・アイコンフォントすべて禁止。
+   写真が無いことが前提の設計なので、1枚入れると全体の理屈が崩れる。
+2. **未確定の情報を書かない。** 実績数値・保有資格・資本金・建設業許可・従業員数・工場・設備。
+   「確認中」「準備中」とも書かない。**その行ごと出さない。**
+   確定情報は `lib/company.ts` にあるものだけ。
+3. **色は5つだけ。** `--paper` `--ink` `--steel` `--line` `--signal`。
+   `--signal` は接点（1px罫の起点・端点・点）にだけ置く。面やグローには使わない。
+4. **文字サイズは7段だけ。** `text-s0`〜`text-s6`（14/16/20/25/31/39/49px）。
+   間の値が要るときは、7段の内側でclampする（例: `clamp(1.9375rem, 6vw, 3.0625rem)`）。
+5. **余白は8pxの倍数だけ。** Tailwindの `--spacing` が8pxなので `p-1` = 8px。
+   `p-[10px]` のような任意値を書かない。
+6. **角丸ゼロ・影ゼロ・罫は1px。**
+7. **ランタイムの依存を増やさない。** アニメーションライブラリもWebGLライブラリも入れない。
+8. **H1・サブ・CTA・電話番号を `opacity:0` から始めない。** 動かすのは transform と opacity だけ。
+
+## 文言を変えたら
+
+`npm run fonts && npm run build` を実行する（サブセットの作り直し）。
+忘れると新しい文字だけ端末のフォントで出る。`npm run test:e2e` が検出する。
+
+見出し用の書体（Zen Kaku Gothic New）は **h1〜h4 / `.font-display` / `.cta` の中の文字しか
+持っていない**。この3つ以外の場所で見出し用の書体を使うときは、
+`scripts/build-fonts.mjs` の `DISPLAY_TAGS` / `DISPLAY_CLASSES` にも足すこと。
+
+## 出す前に
+
+```bash
+npm run check && npm run build && npm run test:e2e && npm run lh
+```
+
+`tests/e2e/gates.spec.ts` が安全条件（横スクロール0・初期可視・reduced-motion・JS無効）を、
+`npm run lh` が公開ゲート（Performance≥90 / A11y≥95 / SEO≥95 / LCP≤2.5s / CLS≤0.1）を見る。
+落ちたまま進めない。
