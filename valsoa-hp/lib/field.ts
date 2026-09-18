@@ -112,7 +112,8 @@ export function mountField(
 
   const draw = () => {
     context.uniform2f(uResolution, width, height);
-    context.uniform1f(uTime, ((performance.now() - started) / 1000) % 600);
+    // 3600秒で折り返す。方向Bの20秒周期・方向Aの12秒周期どちらの整数倍でもあるので段差が出ない
+    context.uniform1f(uTime, ((performance.now() - started) / 1000) % 3600);
     context.drawArrays(context.TRIANGLES, 0, 3);
   };
 
