@@ -47,7 +47,8 @@
 
   --font-display: "Zen Kaku Gothic New", var(--font-ja-system);
   --font-body: "Noto Sans JP", var(--font-ja-system);
-  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* 等幅は英数字だけ。和文はそのまま本文用に渡す（署名行が端末のフォントに落ちない） */
+  --font-mono: "Roboto Mono", "Noto Sans JP", var(--font-ja-system);
   /* 入力欄はサブセット外の文字が来るので、最初から端末のフォントで組む */
   --font-input: var(--font-ja-system);
 }

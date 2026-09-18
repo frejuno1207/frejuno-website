@@ -11,7 +11,7 @@
     "serve": "npx --yes serve out -l 4321",
     "test:e2e": "playwright test",
     "lh": "node scripts/lh.mjs",
-    "fonts": "node scripts/build-fonts.mjs"
+    "fonts": "next build && node scripts/build-fonts.mjs"
   },
   "dependencies": {
     "next": "^16.3.5",

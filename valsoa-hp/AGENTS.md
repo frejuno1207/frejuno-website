@@ -21,7 +21,12 @@
 
 ## 文言を変えたら
 
-`npm run fonts` を実行する（サブセットの作り直し）。忘れると新しい文字だけ端末のフォントで出る。
+`npm run fonts && npm run build` を実行する（サブセットの作り直し）。
+忘れると新しい文字だけ端末のフォントで出る。`npm run test:e2e` が検出する。
+
+見出し用の書体（Zen Kaku Gothic New）は **h1〜h4 / `.font-display` / `.cta` の中の文字しか
+持っていない**。この3つ以外の場所で見出し用の書体を使うときは、
+`scripts/build-fonts.mjs` の `DISPLAY_TAGS` / `DISPLAY_CLASSES` にも足すこと。
 
 ## 出す前に
 

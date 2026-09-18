@@ -28,7 +28,7 @@ npm install
 npm run dev            # 開発
 npm run check          # eslint + tsc（コミット前に必ず）
 npm run build          # 静的書き出し → out/
-npm run fonts          # 文言を変えたらこれ（サブセットを作り直す）
+npm run fonts          # 文言を変えたらこれ（build後にサブセットを作り直す）
 npm run test:e2e       # Playwright（安全条件の実測）
 npm run lh             # Lighthouse モバイル（公開ゲートの実測）
 ```
@@ -45,14 +45,31 @@ npm run lh             # Lighthouse モバイル（公開ゲートの実測）
 ### フォントの扱い（`npm run fonts`）
 
 日本語のGoogle Fontsは約120の `unicode-range` に分割配信されるため、素直に読むと
-1ページで60〜100ファイル・約960KBを取りに行く。そこで CSS2 API の `text=` を使い、
-**サイトに出てくる文字だけ**のサブセットを作って自前で配信している。
+1ページで60〜100ファイル・約960KBを取りに行く。さらにLCPは「見出しの書体が
+落ちてくる時刻」で決まるので、見出し用の書体に本文の全文字を入れるとその分だけ遅れる。
 
-- 生成物: `public/_fonts/*.woff2` と `lib/fonts.generated.ts`（どちらもコミット済み）
-- `@font-face` は `<head>` に直接書き出すのでフォント用のCSSリクエストは0
-- 実測: 5ファイル・216KB（サブセット前は66ファイル・959KB）
-- **文言を変えたら `npm run fonts` を実行する**。実行しないと新しい文字が端末のフォントで出る
-- 入力欄（input/select/textarea）はサブセット外の文字が来るので、最初から端末のフォントで組む
+そこで書き出し済みのHTMLを読んで書体ごとに文字を振り分け、CSS2 APIの `text=` で
+**その書体が実際に描く文字だけ**のサブセットを作り、自前で配信している。
+
+| 書体 | 入れる文字 | 実測 |
+| --- | --- | --- |
+| Zen Kaku Gothic New 900 | h1〜h4 / `.font-display` / `.cta` の中の文字（199字） | 20KB |
+| Zen Kaku Gothic New 700 | 同上 | 20KB |
+| Noto Sans JP 400 | ページに出る全文字（377字） | 58KB |
+| Roboto Mono 400 | ASCIIのみ | 7KB |
+
+- 合計 4ファイル・105KB（素直に読み込んだ場合は66ファイル・959KB）
+- 生成物: `public/_fonts/*.woff2` と `lib/fonts.generated.ts`（どちらもコミット済み。
+  ビルド時にネットワークは要らない）
+- `@font-face` は `<head>` に直接書き出すのでフォント用のCSSリクエストは0。
+  レンダーブロッキングCSSは自前の5KBだけ
+- **文言を変えたら `npm run fonts && npm run build` を実行する**。
+  実行しないと新しい文字が端末のフォントで出る
+- 取りこぼしは `tests/e2e/fonts.spec.ts` が検出する（全テキストノードについて、
+  実際に当たる書体がその文字を持っているかを見る）
+- 入力欄（input/select/textarea）は利用者が何を打つか分からないので、最初から端末のフォントで組む
+- Noto Sans JP 500 は使っていない（使い所がフォームのラベルだけで、
+  1書体60KBを足す価値が無かった）。使う場合は `scripts/build-fonts.mjs` の `FACES` に戻す
 
 ## 設計トークン（`app/globals.css`）
 

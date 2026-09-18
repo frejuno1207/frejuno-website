@@ -17,7 +17,7 @@ const ROWS: readonly Row[] = [
 
 const FIELD =
   "mt-1 block w-full border border-line bg-paper px-2 py-1 text-s1 min-h-6 focus:border-ink";
-const LABEL = "block text-s0 font-medium text-ink";
+const LABEL = "block text-s0 text-ink";
 
 /** 06 会社情報＋CTA。未確定（資本金・建設業許可・従業員数）は行を作らない。 */
 export default function CompanyContact({ variant = "default" }: { variant?: Variant }) {
