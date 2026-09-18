@@ -1,0 +1,520 @@
+@import "tailwindcss";
+
+/* ============================================================
+   VALSOA design tokens
+   5色以外は使わない / 角丸ゼロ / 影ゼロ / 罫は1px / 余白は8pxの倍数
+   ============================================================ */
+:root {
+  --paper: #f2f3f5; /* 地・余白 */
+  --ink: #0e1418; /* 文字・CTAの塗り */
+  --steel: #5c6a76; /* 補助文字 */
+  --line: #d3d8dd; /* 1px罫線 */
+  --signal: #b08536; /* 差し色（接点のみ） */
+
+  --font-ja-system: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+
+  /* 上昇のイージング: 落下しない・バウンドしない */
+  --ease-rise: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  /* 既定パレット/既定サイズを捨て、定義した値だけを使えるようにする */
+  --color-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --drop-shadow-*: initial;
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-steel: var(--steel);
+  --color-line: var(--line);
+  --color-signal: var(--signal);
+
+  /* 型スケールは7段のみ: 14/16/20/25/31/39/49px */
+  --text-s0: 0.875rem; /* 14 */
+  --text-s1: 1rem; /* 16 */
+  --text-s2: 1.25rem; /* 20 */
+  --text-s3: 1.5625rem; /* 25 */
+  --text-s4: 1.9375rem; /* 31 */
+  --text-s5: 2.4375rem; /* 39 */
+  --text-s6: 3.0625rem; /* 49 */
+
+  /* 余白は8pxの倍数のみ（spacing-1 = 8px） */
+  --spacing: 8px;
+
+  --font-display: "Zen Kaku Gothic New", var(--font-ja-system);
+  --font-body: "Noto Sans JP", var(--font-ja-system);
+  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* 入力欄はサブセット外の文字が来るので、最初から端末のフォントで組む */
+  --font-input: var(--font-ja-system);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--text-s1);
+    font-weight: 400;
+    line-height: 1.9;
+    /* 横スクロールを起こさない */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    line-height: 1.32;
+    letter-spacing: 0.01em;
+  }
+
+  /* 角丸ゼロ・影ゼロを既定に固定する */
+  button,
+  input,
+  select,
+  textarea {
+    border-radius: 0;
+    box-shadow: none;
+    font: inherit;
+    color: inherit;
+  }
+
+  input,
+  select,
+  textarea {
+    font-family: var(--font-input);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  [data-surface="steel"] :focus-visible {
+    outline-color: var(--paper);
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: var(--paper);
+  }
+}
+
+/* ============================================================
+   モーションの法則
+   1. 上昇のみ（下から上へ・強いease-out・バウンド禁止）
+   2. 連鎖（160〜220msずつずらす）
+   3. 金は接点だけ・着地の瞬間に一瞬
+   4. FVより下は32〜56px / 600〜800ms
+   5. 場の動きは呼吸より遅い
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-reveal [data-reveal] {
+    opacity: 0;
+    transform: translateY(var(--reveal-distance, 40px));
+    will-change: opacity, transform;
+  }
+
+  html.js-reveal [data-reveal].is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--reveal-duration, 640ms) var(--ease-rise) var(--reveal-delay, 0ms),
+      transform var(--reveal-duration, 640ms) var(--ease-rise) var(--reveal-delay, 0ms);
+    will-change: auto;
+  }
+
+  /* 着地の瞬間だけ、接点の金が一瞬明るくなる */
+  html.js-reveal [data-reveal].is-revealed .signal-tick {
+    animation: signal-land 520ms var(--ease-rise) calc(var(--reveal-delay, 0ms) + 420ms) both;
+  }
+}
+
+@keyframes signal-land {
+  0% {
+    opacity: 0.35;
+  }
+  28% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.55;
+  }
+}
+
+/* 接点の金: 面では使わない。1px罫の起点・端点だけに置く */
+.signal-tick {
+  background-color: var(--signal);
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   共通パーツ
+   ============================================================ */
+.shell {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+@media (min-width: 768px) {
+  .shell {
+    padding-inline: 40px;
+  }
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* CTA */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  padding: 8px 24px;
+  border: 1px solid var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-s1);
+  line-height: 1.5;
+  text-decoration: none;
+  transition: opacity 200ms var(--ease-rise);
+}
+
+.cta--fill {
+  background-color: var(--ink);
+  color: var(--paper);
+}
+
+.cta--line {
+  background-color: transparent;
+  color: var(--ink);
+}
+
+.cta:hover {
+  opacity: 0.82;
+}
+
+.cta:disabled {
+  background-color: var(--steel);
+  border-color: var(--steel);
+  color: var(--paper);
+  cursor: not-allowed;
+}
+
+.cta:disabled:hover {
+  opacity: 1;
+}
+
+/* 暗い面（方向Bのヒーロー） */
+[data-surface="steel"] {
+  color: var(--paper);
+}
+
+/* 暗い面の上のCTA */
+[data-surface="steel"] .cta--fill {
+  background-color: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+
+[data-surface="steel"] .cta--line {
+  color: var(--paper);
+  border-color: var(--paper);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* タグ（枠線のみ・塗りなし） */
+.tag {
+  display: inline-block;
+  border: 1px solid var(--line);
+  padding: 8px 16px;
+  font-size: var(--text-s1);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* ヒーロー共通: 高さは100vhにしない */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: clamp(520px, 72svh, 720px);
+  isolation: isolate;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-block: 64px;
+}
+
+.hero__copy {
+  max-width: 672px; /* 和文42文字ぶん */
+}
+
+.hero__h1 {
+  font-size: clamp(1.9375rem, 6vw, 3.0625rem); /* 31px → 49px（スケール内で補間） */
+  line-height: 1.35;
+}
+
+/* WebGL非対応・コンテキストロスト時のフォールバック（地色から±4%） */
+.field-fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--paper) 96%, var(--ink)) 0%,
+    var(--paper) 46%,
+    color-mix(in srgb, var(--paper) 96%, #ffffff) 100%
+  );
+}
+
+[data-surface="steel"] .field-fallback {
+  background: linear-gradient(to top, #171d23 0%, #1f272e 52%, #2a333b 100%);
+}
+
+.hero__veil {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(242 243 245 / 0.24); /* --paper 24% */
+}
+
+/* 下端だけ地色に溶かし、セクション境界に段差を作らない */
+.hero__hem {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 96px;
+  background: linear-gradient(to bottom, rgb(242 243 245 / 0) 0%, var(--paper) 100%);
+}
+
+/* 連鎖の合図だけを配る要素（それ自身は動かない） */
+html.js-reveal [data-reveal].reveal-trigger {
+  opacity: 1;
+  transform: none;
+}
+
+/* 横並びが縦積みになる幅では、隣を待たせない */
+@media (max-width: 767px) {
+  .chain-md {
+    --reveal-delay: 0ms !important;
+  }
+}
+
+/* ============================================================
+   方向C: 罫を引く
+   ============================================================ */
+.draft-rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: var(--line);
+  transform-origin: left center;
+}
+
+.tag--draft {
+  border-color: transparent;
+}
+
+.draft-frame {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--line);
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js-reveal .reveal-trigger .draft-rule,
+  html.js-reveal .reveal-trigger .draft-frame {
+    transform: scaleX(0);
+  }
+
+  html.js-reveal .reveal-trigger.is-revealed .draft-rule {
+    animation: draw-x 480ms var(--ease-rise) var(--reveal-delay, 0ms) both;
+  }
+
+  html.js-reveal .reveal-trigger.is-revealed .draft-frame {
+    animation: draw-x 380ms var(--ease-rise) var(--reveal-delay, 0ms) both;
+  }
+}
+
+/* 表の行: 上辺の罫を左から右へ */
+.draft-row {
+  position: relative;
+}
+
+.draft-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--line);
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js-reveal [data-reveal].draft-row::before {
+    transform: scaleX(0);
+  }
+
+  html.js-reveal [data-reveal].is-revealed.draft-row::before {
+    animation: draw-x 480ms var(--ease-rise) var(--reveal-delay, 0ms) both;
+  }
+}
+
+@keyframes draw-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* 方向C ヒーロー: SVGの作図。JSに依存せずCSSだけで走り、2.4秒以内に静止する */
+.draw-seg {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  animation: draw-seg var(--dur, 480ms) var(--ease-rise) calc(var(--d, 0) * 1ms) both;
+}
+
+@keyframes draw-seg {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fade-in var(--dur, 400ms) var(--ease-rise) calc(var(--d, 0) * 1ms) both;
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* 寸法線の端点: 金が0.3秒だけ現れ、下の--steelの点に落ち着く */
+.signal-dot {
+  opacity: 1;
+  animation: signal-dot 300ms linear calc(var(--d, 0) * 1ms) both;
+}
+
+@keyframes signal-dot {
+  0% {
+    opacity: 0;
+  }
+  34% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 方向D: 縦罫が上から下へ1回だけ引かれる */
+.rule-y {
+  transform-origin: top center;
+  animation: draw-y 600ms var(--ease-rise) 120ms both;
+}
+
+@keyframes draw-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* 方向B: 暗→明の境界。着地の瞬間だけ金、以後は--lineに落ち着く */
+.seam {
+  position: relative;
+  height: 1px;
+  background-color: var(--line);
+}
+
+.seam__signal {
+  position: absolute;
+  inset: 0;
+  background-color: var(--signal);
+  animation: seam-settle 400ms var(--ease-rise) 700ms both;
+}
+
+@keyframes seam-settle {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 方向C: 8px方眼。地の端で溶かし、断ち切りの線を作らない */
+.draft-grid {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 62%;
+  opacity: 0.25;
+  background-image:
+    repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 8px);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 160px),
+    linear-gradient(to top, transparent 0, #000 120px);
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 160px),
+    linear-gradient(to top, transparent 0, #000 120px);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
